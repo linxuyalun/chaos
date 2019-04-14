@@ -138,20 +138,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                address:
-                  type: object
-                  properties: {}
-             # $ref: '#/components/requestBodies/RealNameAuthentication'
-        description: Created user object
-        required: true  
+        $ref: '#/components/requestBodies/RealNameAuthentication'
+         
   
   '/users/profile':
     get:
@@ -226,51 +214,56 @@ components:
 
   requestBodies:
     RealNameAuthentication:
-      type: object
-      properties:
-        idCardFront:
-          type: string
-          description: the image of the face of id card
-          format: binary
-        idCardBack:
-          type: string
-          description: the image of the rear of id card
-          format: binary
-        name:
-          type: string
-          description: user real name
-          example: Randy Orton
-        idCardType:
-          type: string
-          description: user id card type
-          enum:
-            - type A
-            - type B
-            - type C
-            - type D
-        idCardNumber:
-          type: string
-          description: user id card number
-        address:
-          type: string
-          description: user contact address
-          example: Shanghai Jiaotong University
-        mail:
-          type: string
-          format: email
-        test:
-          type: object
-          properties:
-            idCardNumber:
-              type: string
-              description: user id card number
-            address:
-              type: string
-              description: user contact address
-              example: Shanghai Jiaotong University
-            mail:
-              type: string
-              format: email
+      description: Created user object
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              idCardFront:
+                type: string
+                description: the image of the face of id card
+                format: binary
+              idCardBack:
+                type: string
+                description: the image of the rear of id card
+                format: binary
+              name:
+                type: string
+                description: user real name
+                example: Randy Orton
+              idCardType:
+                type: string
+                description: user id card type
+                enum:
+                  - type A
+                  - type B
+                  - type C
+                  - type D
+              idCardNumber:
+                type: string
+                description: user id card number
+              address:
+                type: string
+                description: user contact address
+                example: Shanghai Jiaotong University
+              mail:
+                type: string
+                format: email
+              test:
+                type: object
+                properties:
+                  idCardNumber:
+                    type: string
+                    description: user id card number
+                  address:
+                    type: string
+                    description: user contact address
+                    example: Shanghai Jiaotong University
+                  mail:
+                    type: string
+                    format: email
         
   securitySchemes:
     bearerAuth:
