@@ -44,7 +44,6 @@ paths:
         - users
       summary: Create a new user
       description: Create a new user via phone number
-      operationId: createUser
       responses:
         '200':
           description: successsful operation
@@ -52,7 +51,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Login'
-        '401':
+        '400':
           description: phone number has been registered.
           content:
             application/json:
@@ -65,13 +64,13 @@ paths:
               $ref: '#/components/schemas/Account'
         description: Created user object
         required: true
+        
   '/users/login':
     post:
       tags:
         - users
       summary: User login
       description: ''
-      operationId: userLogin
       responses:
         '200':
           description: login successfully
@@ -79,7 +78,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Login'
-        '401':
+        '400':
           description: invalid phone number or password.
           content:
             application/json:
@@ -101,19 +100,75 @@ paths:
       description: ''
       security:
         - bearerAuth: []
-      operationId: userLogout
       responses:
         '200':
           description: logout successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Logout successfully
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        
+  '/users/authentication':
+    post:
+      tags:
+        - users
+      summary: user real-name authentication
+      description: |
+        If a user doesn't pass the real-name authentication,
+        user can neither launch a project nor accept a mission
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: information uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          multipart/form-data::
+            schema:
+              $ref: '#/components/requestBodies/RealNameAuthentication'
+        description: Created user object
+        required: true  
   
+  '/users/profile':
+    get:
+      tags: 
+        - users
+      summary: view information of user
+      description: viewing other users' information is unpermitted
+      security:
+        - bearerAuth: []
+      responses:
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+      
+      
   
 components:
   schemas:
@@ -149,273 +204,53 @@ components:
           example: Header.Payload.Signature
     Error:
       type: object
-      example: 
       properties:
         message:
           type: string
           example: Invalid operation!
     
-    ApiResponse:
+    Message:
       type: object
       properties:
-        code:
-          type: integer
-          format: int32
-        type:
-          type: string
         message:
           type: string
-    Cat:
-      description: A representation of a cat
-      allOf:
-        - $ref: '#/components/schemas/Pet'
-        - type: object
-          properties:
-            huntingSkill:
-              type: string
-              description: The measured skill for hunting
-              default: lazy
-              enum:
-                - clueless
-                - lazy
-                - adventurous
-                - aggressive
-          required:
-            - huntingSkill
-    Category:
+          example: Valid operation!
+
+  requestBodies:
+    RealNameAuthentication:
       type: object
       properties:
-        id:
-          description: Category ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
+        idCardFront:
+          type: string
+          description: the image of the face of id card
+          format: binary
+        idCardBack:
+          type: string
+          description: the image of the rear of id card
+          format: binary
         name:
-          description: Category name
           type: string
-          minLength: 1
-        sub:
-          description: Test Sub Category
-          type: object
-          properties:
-            prop1:
-              type: string
-              description: Dumb Property
-      xml:
-        name: Category
-    Dog:
-      description: A representation of a dog
-      allOf:
-        - $ref: '#/components/schemas/Pet'
-        - type: object
-          properties:
-            packSize:
-              type: integer
-              format: int32
-              description: The size of the pack the dog is from
-              default: 1
-              minimum: 1
-          required:
-            - packSize
-    HoneyBee:
-      description: A representation of a honey bee
-      allOf:
-        - $ref: '#/components/schemas/Pet'
-        - type: object
-          properties:
-            honeyPerDay:
-              type: number
-              description: Average amount of honey produced per day in ounces
-              example: 3.14
-          required:
-            - honeyPerDay
-    Id:
-      type: integer
-      format: int64
-      readOnly: true
-    Order:
-      type: object
-      properties:
-        id:
-          description: Order ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        petId:
-          description: Pet ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        quantity:
-          type: integer
-          format: int32
-          minimum: 1
-          default: 1
-        shipDate:
-          description: Estimated ship date
+          description: user real name
+          example: Randy Orton
+        idCardType:
           type: string
-          format: date-time
-        status:
-          type: string
-          description: Order Status
+          description: user id card type
           enum:
-            - placed
-            - approved
-            - delivered
-        complete:
-          description: Indicates whenever order was completed or not
-          type: boolean
-          default: false
-      xml:
-        name: Order
-    Pet:
-      type: object
-      required:
-        - name
-        - photoUrls
-      discriminator:
-        propertyName: petType
-        mapping:
-          cat: '#/components/schemas/Cat'
-          dog: '#/components/schemas/Dog'
-          bee: '#/components/schemas/HoneyBee'
-      properties:
-        id:
-          externalDocs:
-            description: Find more info here
-            url: 'https://example.com'
-          description: Pet ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        category:
-          description: Categories this pet belongs to
-          allOf:
-            - $ref: '#/components/schemas/Category'
-        name:
-          description: The name given to a pet
+            - type A
+            - type B
+            - type C
+            - type D
+        idCardNumber:
           type: string
-          example: Guru
-        photoUrls:
-          description: The list of URL to a cute photos featuring pet
-          type: array
-          maxItems: 20
-          xml:
-            name: photoUrl
-            wrapped: true
-          items:
-            type: string
-            format: url
-        friend:
-          allOf:
-            - $ref: '#/components/schemas/Pet'
-        tags:
-          description: Tags attached to the pet
-          type: array
-          minItems: 1
-          xml:
-            name: tag
-            wrapped: true
-          items:
-            $ref: '#/components/schemas/Tag'
-        status:
+          description: user id card number
+        address:
           type: string
-          description: Pet status in the store
-          enum:
-            - available
-            - pending
-            - sold
-        petType:
-          description: Type of a pet
-          type: string
-      xml:
-        name: Pet
-    Tag:
-      type: object
-      properties:
-        id:
-          description: Tag ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        name:
-          description: Tag name
-          type: string
-          minLength: 1
-      xml:
-        name: Tag
-    User:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        pet:
-          oneOf:
-            - $ref: '#/components/schemas/Pet'
-            - $ref: '#/components/schemas/Tag'
-        username:
-          description: User supplied username
-          type: string
-          minLength: 4
-          example: John78
-        firstName:
-          description: User first name
-          type: string
-          minLength: 1
-          example: John
-        lastName:
-          description: User last name
-          type: string
-          minLength: 1
-          example: Smith
-        email:
-          description: User email address
+          description: user contact address
+          example: Shanghai Jiaotong University
+        mail:
           type: string
           format: email
-          example: john.smith@example.com
-        password:
-          type: string
-          description: >-
-            User password, MUST contain a mix of upper and lower case letters,
-            as well as digits
-          format: password
-          minLength: 8
-          pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
-          example: drowssaP123
-        phone:
-          description: User phone number in international format
-          type: string
-          pattern: '^\+(?:[0-9]-?){6,14}[0-9]$'
-          example: +1-202-555-0192
-          nullable: true
-        userStatus:
-          description: User status
-          type: integer
-          format: int32
-      xml:
-        name: User
-  requestBodies:
-    Pet:
-      content:
-        application/json:
-          schema:
-            allOf:
-              - description: My Pet
-                title: Pettie
-              - $ref: '#/components/schemas/Pet'
-        application/xml:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: hooray
-      description: Pet object that needs to be added to the store
-      required: true
-    UserArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
-      description: List of user object
-      required: true
+        
   securitySchemes:
     bearerAuth:
       type: http
