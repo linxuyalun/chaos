@@ -1,77 +1,420 @@
-swagger: '2.0'
+openapi: 3.0.0
+
+servers:
+  - url: //example.legend.io/api/v1
+    description: Default server
 info:
-  description: |
+  description: >
     ## Introduction
-    API Spec for the legend, naive now.
-  version: 0.0.1
+    API Spec for the legend, naive now. 
+  version: "0.0.2"
   title: The Legend
   contact:
+    name: API Support
     email: xuylin@sjtu.edu.cn
+    url: 'https://github.com/linxuyalun'
+  x-logo:
+    url: 'https://cdn.shopify.com/s/files/1/2573/7056/collections/cskins_model_icons_no_text_square_black-12_large.png?v=1518446092'
+    altText: The Legned logo
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.
-  x-logo:
-    url: https://cdn.shopify.com/s/files/1/2573/7056/collections/cskins_model_icons_no_text_square_black-12_large.png?v=1518446092
-securityDefinitions:
-  Bearer:
-    description: JWT Authentication
-    type: apiKey
-    name: Authorization
-    in: header
-host: example.legend.io
-basePath: /api/v1
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
 tags:
-- name: users
-- name: projects
-schemes:
-- http
-- https
+  - name: users
+    description: Operations about users
+  - name: pet
+    description: Everything about your Pets
+  - name: store
+    description: Access to Petstore orders
+  - name: user
+    description: Operations about user
+x-tagGroups:
+  - name: General
+    tags:
+      - pet
+      - store
+  - name: User Management
+    tags:
+      - users
 paths:
-  '/users/login':
+  '/users':
     post:
       tags:
-      - users
-      summary: User login
-      description: Input phone number and password to login
-      parameters: 
-      - name: user
-        in: body
-        description: Input phone number and password to login
-        required: true
-        schema:
-          required: 
-          - phoneNumber
-          - password
-          properties:
-            phoneNumber:
-              type: string
-            password:
-              type: string
-      responses:
-        201:
-          description: Login successfully
-          schema:
-            properties:
-              message:
-                description: the returned message
-                type: string
-              token:
-                description: the generated token for the user
-                type: string
-        401:
-          description: Login failed
-          schema:
-            properties:
-              message:
-                description: the returned message
-                type: string
-    
-  /:
-    get:
-      security:
-        - Bearer: []
+        - users
+      summary: Create a user
+      description: Create a user via phone number
+      operationId: createUser
       responses:
         '200':
-          description: 'Will send `Authenticated`'
-        '403': 
-          description: 'You do not have necessary permissions for the resource'
+          description: successsful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+        '401':
+          description: phone number has been registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+        description: Created user object
+        required: true
+  'users/login':
+    post:
+      tags:
+        - users
+      summary: User login
+      description: ''
+      operationId: userLogin
+      responses:
+        '200':
+          description: login successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+        '401':
+          description: invalid phone number or password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+        description: Created user object
+        required: true               
+      
+  
+  
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        phone:
+          description: must be your personal number
+          type: string
+          example: 18686862323
+          nullable: true
+        password:
+          type: string
+          description: >-
+            User password, MUST contain a mix of upper and lower case letters,
+            as well as digits
+          format: password
+          minLength: 8
+          maxLength: 64
+          pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+          example: drowssaP123
+    
+    Login:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Login successfully!
+        token:
+          type: string
+          example: Header.Payload.Signature
+          
+    Error:
+      type: object
+      example: 
+      properties:
+        message:
+          type: string
+          example: Invalid operation!
+    
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    Cat:
+      description: A representation of a cat
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            huntingSkill:
+              type: string
+              description: The measured skill for hunting
+              default: lazy
+              enum:
+                - clueless
+                - lazy
+                - adventurous
+                - aggressive
+          required:
+            - huntingSkill
+    Category:
+      type: object
+      properties:
+        id:
+          description: Category ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        name:
+          description: Category name
+          type: string
+          minLength: 1
+        sub:
+          description: Test Sub Category
+          type: object
+          properties:
+            prop1:
+              type: string
+              description: Dumb Property
+      xml:
+        name: Category
+    Dog:
+      description: A representation of a dog
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            packSize:
+              type: integer
+              format: int32
+              description: The size of the pack the dog is from
+              default: 1
+              minimum: 1
+          required:
+            - packSize
+    HoneyBee:
+      description: A representation of a honey bee
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            honeyPerDay:
+              type: number
+              description: Average amount of honey produced per day in ounces
+              example: 3.14
+          required:
+            - honeyPerDay
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
+    Order:
+      type: object
+      properties:
+        id:
+          description: Order ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        petId:
+          description: Pet ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          default: 1
+        shipDate:
+          description: Estimated ship date
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          enum:
+            - placed
+            - approved
+            - delivered
+        complete:
+          description: Indicates whenever order was completed or not
+          type: boolean
+          default: false
+      xml:
+        name: Order
+    Pet:
+      type: object
+      required:
+        - name
+        - photoUrls
+      discriminator:
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/Cat'
+          dog: '#/components/schemas/Dog'
+          bee: '#/components/schemas/HoneyBee'
+      properties:
+        id:
+          externalDocs:
+            description: Find more info here
+            url: 'https://example.com'
+          description: Pet ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        category:
+          description: Categories this pet belongs to
+          allOf:
+            - $ref: '#/components/schemas/Category'
+        name:
+          description: The name given to a pet
+          type: string
+          example: Guru
+        photoUrls:
+          description: The list of URL to a cute photos featuring pet
+          type: array
+          maxItems: 20
+          xml:
+            name: photoUrl
+            wrapped: true
+          items:
+            type: string
+            format: url
+        friend:
+          allOf:
+            - $ref: '#/components/schemas/Pet'
+        tags:
+          description: Tags attached to the pet
+          type: array
+          minItems: 1
+          xml:
+            name: tag
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Tag'
+        status:
+          type: string
+          description: Pet status in the store
+          enum:
+            - available
+            - pending
+            - sold
+        petType:
+          description: Type of a pet
+          type: string
+      xml:
+        name: Pet
+    Tag:
+      type: object
+      properties:
+        id:
+          description: Tag ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        name:
+          description: Tag name
+          type: string
+          minLength: 1
+      xml:
+        name: Tag
+    User:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        pet:
+          oneOf:
+            - $ref: '#/components/schemas/Pet'
+            - $ref: '#/components/schemas/Tag'
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+        firstName:
+          description: User first name
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          description: User last name
+          type: string
+          minLength: 1
+          example: Smith
+        email:
+          description: User email address
+          type: string
+          format: email
+          example: john.smith@example.com
+        password:
+          type: string
+          description: >-
+            User password, MUST contain a mix of upper and lower case letters,
+            as well as digits
+          format: password
+          minLength: 8
+          pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+          example: drowssaP123
+        phone:
+          description: User phone number in international format
+          type: string
+          pattern: '^\+(?:[0-9]-?){6,14}[0-9]$'
+          example: +1-202-555-0192
+          nullable: true
+        userStatus:
+          description: User status
+          type: integer
+          format: int32
+      xml:
+        name: User
+  requestBodies:
+    Pet:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: My Pet
+                title: Pettie
+              - $ref: '#/components/schemas/Pet'
+        application/xml:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: hooray
+      description: Pet object that needs to be added to the store
+      required: true
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    petstore_auth:
+      description: |
+        Get access to data while protecting your account credentials.
+        OAuth2 is also a safer and more secure way to give you access.
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
+          scopes:
+            'write:pets': modify pets in your account
+            'read:pets': read your pets
+    api_key:
+      description: >
+        For this sample, you can use the api key `special-key` to test the
+        authorization filters.
+      type: apiKey
+      name: api_key
+      in: header
