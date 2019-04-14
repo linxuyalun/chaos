@@ -4,8 +4,8 @@ servers:
   - url: //example.legend.io/api/v1
     description: Default server
 info:
-  description: >
-    ## Introduction
+  description: |
+    # Introduction
     API Spec for the legend, naive now. 
   version: "0.0.2"
   title: The Legend
@@ -42,8 +42,8 @@ paths:
     post:
       tags:
         - users
-      summary: Create a user
-      description: Create a user via phone number
+      summary: Create a new user
+      description: Create a new user via phone number
       operationId: createUser
       responses:
         '200':
@@ -92,7 +92,27 @@ paths:
               $ref: '#/components/schemas/Account'
         description: Created user object
         required: true               
-      
+  
+  '/users/logout':
+    get:
+      tags:
+        - users
+      summary: User logout
+      description: ''
+      security:
+        - bearerAuth: []
+      operationId: userLogout
+      responses:
+        '200':
+          description: logout successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successfully
   
   
 components:
@@ -118,7 +138,6 @@ components:
           maxLength: 64
           pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
           example: drowssaP123
-    
     Login:
       type: object
       properties:
@@ -128,7 +147,6 @@ components:
         token:
           type: string
           example: Header.Payload.Signature
-          
     Error:
       type: object
       example: 
