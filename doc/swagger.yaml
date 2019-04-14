@@ -217,7 +217,7 @@ components:
           example: Valid operation!
 
   requestBodies:
-    RealNameAuthentication
+    RealNameAuthentication:
       type: object
       properties:
         idCardFront:
