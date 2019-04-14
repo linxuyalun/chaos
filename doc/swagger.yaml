@@ -217,7 +217,7 @@ components:
           example: Valid operation!
 
   requestBodies:
-    RealNameAuthentication:
+    RealNameAuthentication
       type: object
       properties:
         idCardFront:
@@ -250,6 +250,19 @@ components:
         mail:
           type: string
           format: email
+        test:
+          type: object
+          properties:
+            idCardNumber:
+              type: string
+              description: user id card number
+            address:
+              type: string
+              description: user contact address
+              example: Shanghai Jiaotong University
+            mail:
+              type: string
+              format: email
         
   securitySchemes:
     bearerAuth:
