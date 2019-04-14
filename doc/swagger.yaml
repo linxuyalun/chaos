@@ -1,0 +1,41 @@
+---
+swagger: "2.0"
+info:
+  description: |
+    ## 介绍
+    本项目为传奇系统的API接口设计文档，目前文档暂处于设计阶段
+  version: 0.0.1
+  title: The Legend
+  contact:
+    email: xuylin@sjtu.edu.cn
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.
+  x-logo:
+    url: https://static.planetminecraft.com/files/resource_media/screenshot/1342/i-am-legend-tc-DI-to-L8_6569943_lrg.jpg
+host: example.legend.io
+basePath: /api/v1
+tags:
+- name: users
+- name: projects
+schemes:
+- http
+- https
+paths:
+  /:
+    get:
+      parameters: []
+      responses:
+        200:
+          description: Will send `Authenticated`
+        403:
+          description: You do not have necessary permissions for the resource
+      security:
+      - Bearer: []
+securityDefinitions:
+  Bearer:
+    description: 本项目使用jwt进行身份认证
+    type: apiKey
+    name: Authorization
+    in: header
+definitions: {}
