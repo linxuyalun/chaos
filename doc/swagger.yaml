@@ -139,9 +139,17 @@ paths:
                 $ref: '#/components/schemas/Error'
       requestBody:
         content:
-          multipart/form-data::
+          multipart/form-data:
             schema:
-              $ref: '#/components/requestBodies/RealNameAuthentication'
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                address:
+                  type: object
+                  properties: {}
+             # $ref: '#/components/requestBodies/RealNameAuthentication'
         description: Created user object
         required: true  
   
