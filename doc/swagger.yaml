@@ -1,9 +1,8 @@
----
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: |
-    ## 介绍
-    本项目为传奇系统的API接口设计文档，目前文档暂处于设计阶段
+    ## Introduction
+    API Spec for the legend, naive now.
   version: 0.0.1
   title: The Legend
   contact:
@@ -12,7 +11,13 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.
   x-logo:
-    url: https://static.planetminecraft.com/files/resource_media/screenshot/1342/i-am-legend-tc-DI-to-L8_6569943_lrg.jpg
+    url: https://cdn.shopify.com/s/files/1/2573/7056/collections/cskins_model_icons_no_text_square_black-12_large.png?v=1518446092
+securityDefinitions:
+  Bearer:
+    description: JWT Authentication
+    type: apiKey
+    name: Authorization
+    in: header
 host: example.legend.io
 basePath: /api/v1
 tags:
@@ -22,20 +27,51 @@ schemes:
 - http
 - https
 paths:
+  '/users/login':
+    post:
+      tags:
+      - users
+      summary: User login
+      description: Input phone number and password to login
+      parameters: 
+      - name: user
+        in: body
+        description: Input phone number and password to login
+        required: true
+        schema:
+          required: 
+          - phoneNumber
+          - password
+          properties:
+            phoneNumber:
+              type: string
+            password:
+              type: string
+      responses:
+        201:
+          description: Login successfully
+          schema:
+            properties:
+              message:
+                description: the returned message
+                type: string
+              token:
+                description: the generated token for the user
+                type: string
+        401:
+          description: Login failed
+          schema:
+            properties:
+              message:
+                description: the returned message
+                type: string
+    
   /:
     get:
-      parameters: []
-      responses:
-        200:
-          description: Will send `Authenticated`
-        403:
-          description: You do not have necessary permissions for the resource
       security:
-      - Bearer: []
-securityDefinitions:
-  Bearer:
-    description: 本项目使用jwt进行身份认证
-    type: apiKey
-    name: Authorization
-    in: header
-definitions: {}
+        - Bearer: []
+      responses:
+        '200':
+          description: 'Will send `Authenticated`'
+        '403': 
+          description: 'You do not have necessary permissions for the resource'
