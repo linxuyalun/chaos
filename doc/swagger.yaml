@@ -65,7 +65,7 @@ paths:
               $ref: '#/components/schemas/Account'
         description: Created user object
         required: true
-  'users/login':
+  '/users/login':
     post:
       tags:
         - users
@@ -99,6 +99,9 @@ components:
   schemas:
     Account:
       type: object
+      required:
+        - phone
+        - password
       properties:
         phone:
           description: must be your personal number
@@ -400,21 +403,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    petstore_auth:
-      description: |
-        Get access to data while protecting your account credentials.
-        OAuth2 is also a safer and more secure way to give you access.
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
-          scopes:
-            'write:pets': modify pets in your account
-            'read:pets': read your pets
-    api_key:
-      description: >
-        For this sample, you can use the api key `special-key` to test the
-        authorization filters.
-      type: apiKey
-      name: api_key
-      in: header
