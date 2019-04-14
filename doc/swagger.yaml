@@ -257,6 +257,42 @@ components:
                   mail:
                     type: string
                     format: email
+                    description: the email address to contact
+              occupationalInfo:
+                type: object
+                properties:
+                  company:
+                    type: string
+                    description: the company user works for
+                    example: alibaba
+                  legalRepresentative:
+                    type: string
+                    description: the legal representative name for the company
+                  phone:
+                    type: string
+                    description: the phone number of the company
+                  identity:
+                    type: string
+                    description: the identity of the industry user works in
+                    enum:
+                      - judge
+                      - lawyer
+                      - accountant
+                      - liquidator
+                      - financial consultant
+                      - business management
+                      - others
+                  position:
+                    type: string
+                    description: the position user in
+                    example: project manager
+              bankAccount:
+                type: object
+                properties:
+                  todo:
+                    type: string
+                    example: todo
+                    
 
   securitySchemes:
     bearerAuth:
