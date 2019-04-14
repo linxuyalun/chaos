@@ -221,39 +221,32 @@ components:
           schema:
             type: object
             properties:
-              idCardFront:
-                type: string
-                description: the image of the face of id card
-                format: binary
-              idCardBack:
-                type: string
-                description: the image of the rear of id card
-                format: binary
-              name:
-                type: string
-                description: user real name
-                example: Randy Orton
-              idCardType:
-                type: string
-                description: user id card type
-                enum:
-                  - type A
-                  - type B
-                  - type C
-                  - type D
-              idCardNumber:
-                type: string
-                description: user id card number
-              address:
-                type: string
-                description: user contact address
-                example: Shanghai Jiaotong University
-              mail:
-                type: string
-                format: email
-              test:
+              files:
                 type: object
                 properties:
+                  idCardFront:
+                    type: string
+                    description: the image of the face of id card
+                    format: binary
+                  idCardBack:
+                    type: string
+                    description: the image of the rear of id card
+                    format: binary
+              personalInfo:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: user real name
+                    example: Randy Orton
+                  idCardType:
+                    type: string
+                    description: user id card type
+                    enum:
+                      - type A
+                      - type B
+                      - type C
+                      - type D
                   idCardNumber:
                     type: string
                     description: user id card number
@@ -264,7 +257,7 @@ components:
                   mail:
                     type: string
                     format: email
-        
+
   securitySchemes:
     bearerAuth:
       type: http
