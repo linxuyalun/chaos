@@ -407,14 +407,55 @@ components:
               type: string
               example: "13822098739"
           
+    CompanyApplicant:
+      description: The applicant is a company
+      allOf:
+        - $ref: '#/components/schemas/Applicant'
+        - type: object
+          properties:
+            company_name:
+              type: string
+              example: alibaba
+            credit_number:
+              type: string
+              description: Credit No. is the unique id for a company
+              example: "3829472048295672049"
+    
+    NaturalPersonApplicant:
+      description: The applicant is a natural person
+      allOf:
+        - $ref: '#/components/schemas/Applicant'
+        - type: object
+          properties:
+            natural_person_name:
+              type: string
+              example: Nakamura
+            credentials_number:
+              type: string
+              description: credentials' number
+              example: "533527198909210238"
+    
     Applicant:
       type: object
       description: the person who want to launch the case
-      allOf:
-        - $ref: '#/components/schemas/PractitionerPersonalInfo'
-        - oneOf:
-          - $ref: '#/components/schemas/Message'
-          - $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: applicant_type
+        mapping:
+          company: '#/components/schemas/CompanyApplicant'
+          natural_person: '#/components/schemas/NaturalPersonApplicant'
+      properties:
+        application_type:
+          description: type of the application
+          type: string
+          enum:
+            - creditor-application
+            - debtor-application
+            - shareholder-application
+        applicant_type:
+          description: type of the applicant
+          type: string
+          
+      
         
           
 
