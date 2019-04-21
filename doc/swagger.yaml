@@ -388,7 +388,7 @@ components:
           example: 2016/05/26
         company_contact:
           type: string
-          example: "5385470"
+          example: 5385470
         registration_authority:
           type: string
           example: Shanghai Trade and Industry Bureau
@@ -408,40 +408,24 @@ components:
               example: "13822098739"
           
     CompanyApplicant:
-      description: The applicant is a natural person
-      type: object
-      properties:
-        application_type:
-          description: type of the application
-          type: string
-          enum:
-            - creditor-application
-            - debtor-application
-            - shareholder-application
-        applicant:
-          type: object
+      description: The applicant is a company
+      allOf:
+        - $ref: '#/components/schemas/Applicant'
+        - type: object
           properties:
-            natural_person_name:
+            company_name:
               type: string
-              example: Nakamura
-            credentials_number:
+              example: alibaba
+            credit_number:
               type: string
-              description: credentials' number
-              example: "533527198909210238"
+              description: Credit No. is the unique id for a company
+              example: "3829472048295672049"
     
     NaturalPersonApplicant:
       description: The applicant is a natural person
-      type: object
-      properties:
-        application_type:
-          description: type of the application
-          type: string
-          enum:
-            - creditor-application
-            - debtor-application
-            - shareholder-application
-        applicant:
-          type: object
+      allOf:
+        - $ref: '#/components/schemas/Applicant'
+        - type: object
           properties:
             natural_person_name:
               type: string
@@ -469,7 +453,6 @@ components:
             - shareholder-application
         applicant_type:
           description: type of the applicant
-          type: string
           
       
         
@@ -529,12 +512,6 @@ components:
         application/json:
           schema:
             type: object
-            description: the person who want to launch the case
-            discriminator:
-              propertyName: applicant_type
-              mapping:
-                company: '#/components/schemas/CompanyApplicant'
-                natural_person: '#/components/schemas/NaturalPersonApplicant'
             properties:
               case_type:
                 type: string
@@ -546,9 +523,8 @@ components:
                   - E
               debtor:
                 $ref: '#/components/schemas/Debtor'
-              applicant_type:
-                description: type of the applicant
-                type: string
+              applicant:
+                $ref: '#/components/schemas/Applicant'
                 
 
   securitySchemes:
