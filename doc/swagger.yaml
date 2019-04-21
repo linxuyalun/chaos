@@ -388,7 +388,7 @@ components:
           example: 2016/05/26
         company_contact:
           type: string
-          example: 5385470
+          example: "5385470"
         registration_authority:
           type: string
           example: Shanghai Trade and Industry Bureau
@@ -407,6 +407,32 @@ components:
               type: string
               example: "13822098739"
           
+    Trustee:
+      description: A trustee is a person or firm that holds or administers property or assets for the benefit of a third party
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of trustee
+          example: Dan
+        credentials_number:
+            type: string
+            description: credentials' number
+            example: "533527198909210238"
+        company:
+          type: string
+          description: the company user works for
+          example: alibaba
+        company_contact:
+          type: string
+          description: the phone number of the company
+          example: "5385470"
+        address:
+          type: string
+          description: address is the address of the trustee
+          example: Shanghai Jiaotong University
+        
+    
     CompanyApplicant:
       description: The applicant is a company
       allOf:
@@ -420,6 +446,19 @@ components:
               type: string
               description: Credit No. is the unique id for a company
               example: "3829472048295672049"
+            legal_representative:
+              description: the legal representative for the company
+              type: string
+              example: john cena
+            address:
+              type: string
+              description: address is the address of the registered address of the company
+              example: Shanghai Jiaotong University
+            company_contact:
+              type: string
+              example: "5385470"
+            trustee:
+              $ref: '#/components/schemas/Trustee'
     
     NaturalPersonApplicant:
       description: The applicant is a natural person
@@ -434,6 +473,21 @@ components:
               type: string
               description: credentials' number
               example: "533527198909210238"
+            phone:
+              type: string
+              description: the phone number of the company
+              example: "13923456728"
+            address:
+              type: string
+              description: address is the address of the natural person
+              example: Shanghai Jiaotong University
+            trustees:
+              type: array
+              minLength: 1
+              maxLength: 4
+              items:
+                $ref: '#/components/schemas/Trustee'
+            
     
     Applicant:
       type: object
@@ -453,11 +507,8 @@ components:
             - shareholder-application
         applicant_type:
           description: type of the applicant
-          
-      
+          type: string
         
-          
-
          
   requestBodies:
     PractitionerRealNameAuthentication:
