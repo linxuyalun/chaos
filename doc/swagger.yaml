@@ -24,7 +24,9 @@ tags:
   - name: practitioners
     description: Operations about practitioner, a practitioner is a person to launch a case and manage it
   - name: cases
-    description: A bankruptcy case is created by a practitioner, and every case is unique. All information can be seen in the case.
+    description: >-
+      A bankruptcy case is created by a practitioner, and every case is unique.
+      All information can be seen in the case.
   - name: store
     description: Access to Petstore orders
   - name: user
@@ -157,12 +159,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  personalInfo:
+                  personal_info:
                     $ref: '#/components/schemas/PractitionerPersonalInfo'
                   contact:
                     $ref: '#/components/schemas/PractitionerContact'
-                  occupationalInfo:
+                  occupational_info:
                     $ref: '#/components/schemas/PractitionerOccupationalInfo'
+                  case_info:
+                    type: object
+                    
         '401':
           description: User not login
           content:
@@ -205,6 +210,47 @@ paths:
                 $ref: '#/components/schemas/Error' 
       requestBody:
         $ref: '#/components/requestBodies/UpdatePractitionerInfo'
+  
+  '/cases':
+    post:
+      tags:
+        - cases
+      summary: launch a new case
+      description: >-
+        Practitioners can launch a new case. 
+        When a new case is createrd, the remaining workflow is case-driven.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: initiate the case successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: initiate case successfully!
+                  case_id:
+                    description: the only id of the case
+                    type: string
+                    format: uuid
+                    example: 550e8400-e29b-41d4-a716-446655440000
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+      requestBody:
+        $ref: '#/components/requestBodies/CaseInfo'
         
   
 components:
@@ -219,7 +265,6 @@ components:
           description: must be your personal number
           type: string
           example: "18686862323"
-          nullable: true
         password:
           type: string
           description: >-
@@ -230,6 +275,7 @@ components:
           maxLength: 64
           pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
           example: drowssaP123
+    
     Login:
       type: object
       properties:
@@ -239,6 +285,7 @@ components:
         token:
           type: string
           example: Header.Payload.Signature
+    
     Error:
       type: object
       properties:
@@ -260,13 +307,13 @@ components:
           type: string
           description: user real name
           example: Randy Orton
-        credentialsType:
+        credentials_type:
           type: string
           description: credentials type
           enum:
             - id-card
             - others
-        credentialsNumber:
+        credentials_number:
           type: string
           description: credentials' number
           example: "533527198909210238"
@@ -290,11 +337,11 @@ components:
           type: string
           description: the company user works for
           example: alibaba
-        legalRepresentative:
+        legal_representative:
           type: string
           description: the legal representative name for the company
           example: john cena
-        phone:
+        company_contact:
           type: string
           description: the phone number of the company
         identity:
@@ -312,6 +359,64 @@ components:
           type: string
           description: the position user in
           example: project manager
+    
+    Debtor:
+      type: object
+      properties:
+        company_name:
+          type: string
+          example: alibaba
+        credit_number:
+          type: string
+          description: Credit No. is the unique id for a company
+          example: "3829472048295672049"
+        address:
+          type: string
+          description: address is the address of the registered address of the company
+          example: Shanghai Jiaotong University
+        business_scope:
+          type: string
+          example: clothes
+        registered_capital:
+          type: string
+          example: 5 millions
+        subscribed_capital:
+          type: string
+          example: 3 millions
+        establishment_day:
+          type: string
+          example: 2016/05/26
+        company_contact:
+          type: string
+          example: 5385470
+        registration_authority:
+          type: string
+          example: Shanghai Trade and Industry Bureau
+        legal_representative:
+          type: object
+          description: the legal representative for the company
+          properties:
+            name:
+              type: string
+              example: john cena
+            credentials_number:
+              type: string
+              description: credentials' number
+              example: "533527198909210238"
+            phone:
+              type: string
+              example: "13822098739"
+          
+    Applicant:
+      type: object
+      description: the person who want to launch the case
+      allOf:
+        - $ref: '#/components/schemas/PractitionerPersonalInfo'
+        - oneOf:
+          - $ref: '#/components/schemas/Message'
+          - $ref: '#/components/schemas/Error'
+        
+          
 
          
   requestBodies:
@@ -326,21 +431,21 @@ components:
               files:
                 type: object
                 properties:
-                  credentialsFront:
+                  credentials_front:
                     type: string
                     description: the image address of the face of credentials
                     example: store.legend.law/GUQMDUAOQ8NKQQ
-                  credentialsBack:
+                  credentials_back:
                     type: string
                     description: the image address of the rear of credentials
                     example: store.legend.law/WOQKEHXUWIGFDMH
-              personalInfo:
+              personal_info:
                 $ref: '#/components/schemas/PractitionerPersonalInfo'
               contact:
                 $ref: '#/components/schemas/PractitionerContact'
-              occupationalInfo:
+              occupational_info:
                 $ref: '#/components/schemas/PractitionerOccupationalInfo'
-              bankAccount:
+              bank_account:
                 type: object
                 properties:
                   todo:
@@ -357,9 +462,30 @@ components:
             properties:
               contact:
                 $ref: '#/components/schemas/PractitionerContact'
-              occupationalInfo:
+              occupational_info:
                 $ref: '#/components/schemas/PractitionerOccupationalInfo'
-                    
+
+    CaseInfo:
+      description: information of initiate a case
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              case_type:
+                type: string
+                enum:
+                  - A
+                  - B
+                  - C
+                  - D
+                  - E
+              debtor:
+                $ref: '#/components/schemas/Debtor'
+              applicant:
+                $ref: '#/components/schemas/Applicant'
+                
 
   securitySchemes:
     bearerAuth:
