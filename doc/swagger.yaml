@@ -336,6 +336,8 @@ components:
                     example: store.legend.law/WOQKEHXUWIGFDMH
               personalInfo:
                 $ref: '#/components/schemas/PractitionerPersonalInfo'
+              contact:
+                $ref: '#/components/schemas/PractitionerContact'
               occupationalInfo:
                 $ref: '#/components/schemas/PractitionerOccupationalInfo'
               bankAccount:
@@ -353,27 +355,10 @@ components:
           schema:
             type: object
             properties:
-              files:
-                type: object
-                properties:
-                  credentialsFront:
-                    type: string
-                    description: the image address of the face of credentials
-                    example: store.legend.law/GUQMDUAOQ8NKQQ
-                  credentialsBack:
-                    type: string
-                    description: the image address of the rear of credentials
-                    example: store.legend.law/WOQKEHXUWIGFDMH
-              personalInfo:
-                $ref: '#/components/schemas/PractitionerPersonalInfo'
+              contact:
+                $ref: '#/components/schemas/PractitionerContact'
               occupationalInfo:
                 $ref: '#/components/schemas/PractitionerOccupationalInfo'
-              bankAccount:
-                type: object
-                properties:
-                  todo:
-                    type: string
-                    example: todo
                     
 
   securitySchemes:
