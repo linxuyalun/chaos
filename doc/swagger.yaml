@@ -21,10 +21,10 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 
 tags:
-  - name: users
-    description: Operations about users
-  - name: pet
-    description: Everything about your Pets
+  - name: practitioners
+    description: Operations about practitioner, a practitioner is a person to launch a case and manage it
+  - name: cases
+    description: Everything about cases
   - name: store
     description: Access to Petstore orders
   - name: user
@@ -32,16 +32,16 @@ tags:
 x-tagGroups:
   - name: General
     tags:
-      - pet
+      - cases
       - store
   - name: User Management
     tags:
-      - users
+      - practitioners
 paths:
-  '/users':
+  '/practitioners/registeration':
     post:
       tags:
-        - users
+        - practitioners
       summary: Create a new user
       description: Create a new user via phone number
       responses:
@@ -65,10 +65,10 @@ paths:
         description: Created user object
         required: true
         
-  '/users/login':
+  '/practitioners/login':
     post:
       tags:
-        - users
+        - practitioners
       summary: User login
       description: ''
       responses:
@@ -92,10 +92,10 @@ paths:
         description: Created user object
         required: true               
   
-  '/users/logout':
+  '/practitioners/logout':
     get:
       tags:
-        - users
+        - practitioners
       summary: User logout
       description: ''
       security:
@@ -114,10 +114,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         
-  '/users/authentication':
+  '/practitioners/authentication':
     post:
       tags:
-        - users
+        - practitioners
       summary: user real-name authentication
       description: |
         If a user doesn't pass the real-name authentication,
@@ -141,15 +141,26 @@ paths:
         $ref: '#/components/requestBodies/RealNameAuthentication'
          
   
-  '/users/profile':
+  '/practitioners/profile':
     get:
       tags: 
-        - users
-      summary: view information of user
+        - practitioners
+      summary: view information of a practitioner
       description: viewing other users' information is unpermitted
       security:
         - bearerAuth: []
       responses:
+        '200':
+          description: user basic information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  personalInfo:
+                    $ref: '#/components/schemas/PersonalInfo'
+                  occupationalInfo:
+                    $ref: '#/components/schemas/OccupationalInfo'
         '401':
           description: User not login
           content:
@@ -164,7 +175,6 @@ paths:
                 $ref: '#/components/schemas/Error'
       
       
-      
   
 components:
   schemas:
@@ -177,7 +187,7 @@ components:
         phone:
           description: must be your personal number
           type: string
-          example: 18686862323
+          example: "18686862323"
           nullable: true
         password:
           type: string
@@ -211,81 +221,87 @@ components:
         message:
           type: string
           example: Valid operation!
-
+    
+    PersonalInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: user real name
+          example: Randy Orton
+        credentialsType:
+          type: string
+          description: credentials type
+          enum:
+            - id-card
+            - others
+        credentialsNumber:
+          type: string
+          description: credentials' number
+          example: "533527198909210238"
+        address:
+          type: string
+          description: user contact address
+          example: Shanghai Jiaotong University
+        mail:
+          type: string
+          format: email
+          description: the email address to contact
+    
+    OccupationalInfo:
+      type: object
+      properties:
+        company:
+          type: string
+          description: the company user works for
+          example: alibaba
+        legalRepresentative:
+          type: string
+          description: the legal representative name for the company
+          example: john cena
+        phone:
+          type: string
+          description: the phone number of the company
+        identity:
+          type: string
+          description: the identity of the industry user works in
+          enum:
+            - judge
+            - lawyer
+            - accountant
+            - liquidator
+            - financial-consultant
+            - business-management
+            - others
+        position:
+          type: string
+          description: the position user in
+          example: project manager
+          
   requestBodies:
     RealNameAuthentication:
       description: Created user object
       required: true
       content:
-        multipart/form-data:
+        application/json:
           schema:
             type: object
             properties:
               files:
                 type: object
                 properties:
-                  idCardFront:
+                  credentialsFront:
                     type: string
-                    description: the image of the face of id card
-                    format: binary
-                  idCardBack:
+                    description: the image address of the face of credentials
+                    example: store.legend.law/GUQMDUAOQ8NKQQ
+                  credentialsBack:
                     type: string
-                    description: the image of the rear of id card
-                    format: binary
+                    description: the image address of the rear of credentials
+                    example: store.legend.law/WOQKEHXUWIGFDMH
               personalInfo:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: user real name
-                    example: Randy Orton
-                  idCardType:
-                    type: string
-                    description: user id card type
-                    enum:
-                      - type A
-                      - type B
-                      - type C
-                      - type D
-                  idCardNumber:
-                    type: string
-                    description: user id card number
-                  address:
-                    type: string
-                    description: user contact address
-                    example: Shanghai Jiaotong University
-                  mail:
-                    type: string
-                    format: email
-                    description: the email address to contact
+                $ref: '#/components/schemas/PersonalInfo'
               occupationalInfo:
-                type: object
-                properties:
-                  company:
-                    type: string
-                    description: the company user works for
-                    example: alibaba
-                  legalRepresentative:
-                    type: string
-                    description: the legal representative name for the company
-                  phone:
-                    type: string
-                    description: the phone number of the company
-                  identity:
-                    type: string
-                    description: the identity of the industry user works in
-                    enum:
-                      - judge
-                      - lawyer
-                      - accountant
-                      - liquidator
-                      - financial consultant
-                      - business management
-                      - others
-                  position:
-                    type: string
-                    description: the position user in
-                    example: project manager
+                $ref: '#/components/schemas/OccupationalInfo'
               bankAccount:
                 type: object
                 properties:
