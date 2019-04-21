@@ -175,8 +175,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      
-  '/practitioners/profile':
     put:
       tags: 
         - practitioners
@@ -207,7 +205,6 @@ paths:
                 $ref: '#/components/schemas/Error' 
       requestBody:
         $ref: '#/components/requestBodies/UpdatePractitionerInfo'
-
         
   
 components:
