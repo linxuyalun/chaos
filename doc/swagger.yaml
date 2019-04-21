@@ -453,7 +453,6 @@ components:
             - shareholder-application
         applicant_type:
           description: type of the applicant
-          type: string
           
       
         
