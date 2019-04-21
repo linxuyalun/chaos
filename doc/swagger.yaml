@@ -24,7 +24,7 @@ tags:
   - name: practitioners
     description: Operations about practitioner, a practitioner is a person to launch a case and manage it
   - name: cases
-    description: Everything about cases
+    description: A bankruptcy case is created by a practitioner, and every case is unique. All information can be seen in the case.
   - name: store
     description: Access to Petstore orders
   - name: user
@@ -42,7 +42,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: Create a new user
+      summary: Create a new practitioner
       description: Create a new user via phone number
       responses:
         '200':
@@ -69,7 +69,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: User login
+      summary: Practitioner login
       description: ''
       responses:
         '200':
@@ -96,7 +96,7 @@ paths:
     get:
       tags:
         - practitioners
-      summary: User logout
+      summary: Practitioner logout
       description: ''
       security:
         - bearerAuth: []
@@ -118,7 +118,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: user real-name authentication
+      summary: Practitioner real-name authentication
       description: |
         If a user doesn't pass the real-name authentication,
         user can neither launch a project nor accept a mission
@@ -138,7 +138,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       requestBody:
-        $ref: '#/components/requestBodies/RealNameAuthentication'
+        $ref: '#/components/requestBodies/PractitionerRealNameAuthentication'
          
   
   '/practitioners/profile':
@@ -158,9 +158,11 @@ paths:
                 type: object
                 properties:
                   personalInfo:
-                    $ref: '#/components/schemas/PersonalInfo'
+                    $ref: '#/components/schemas/PractitionerPersonalInfo'
+                  contact:
+                    $ref: '#/components/schemas/PractitionerContact'
                   occupationalInfo:
-                    $ref: '#/components/schemas/OccupationalInfo'
+                    $ref: '#/components/schemas/PractitionerOccupationalInfo'
         '401':
           description: User not login
           content:
@@ -174,7 +176,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       
-      
+  '/practitioners/profile':
+    put:
+      tags: 
+        - practitioners
+      summary: update information of a practitioner
+      description: >-
+        Information can be updated is partial, 
+        some information such as name, credentials and so on can't be modyfied.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: information updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePractitionerInfo'
+
+        
   
 components:
   schemas:
@@ -222,7 +256,7 @@ components:
           type: string
           example: Valid operation!
     
-    PersonalInfo:
+    PractitionerPersonalInfo:
       type: object
       properties:
         name:
@@ -239,6 +273,10 @@ components:
           type: string
           description: credentials' number
           example: "533527198909210238"
+
+    PractitionerContact:
+      type: object
+      properties:
         address:
           type: string
           description: user contact address
@@ -248,7 +286,7 @@ components:
           format: email
           description: the email address to contact
     
-    OccupationalInfo:
+    PractitionerOccupationalInfo:
       type: object
       properties:
         company:
@@ -277,10 +315,11 @@ components:
           type: string
           description: the position user in
           example: project manager
-          
+
+         
   requestBodies:
-    RealNameAuthentication:
-      description: Created user object
+    PractitionerRealNameAuthentication:
+      description: Created practitioner object
       required: true
       content:
         application/json:
@@ -299,9 +338,39 @@ components:
                     description: the image address of the rear of credentials
                     example: store.legend.law/WOQKEHXUWIGFDMH
               personalInfo:
-                $ref: '#/components/schemas/PersonalInfo'
+                $ref: '#/components/schemas/PractitionerPersonalInfo'
               occupationalInfo:
-                $ref: '#/components/schemas/OccupationalInfo'
+                $ref: '#/components/schemas/PractitionerOccupationalInfo'
+              bankAccount:
+                type: object
+                properties:
+                  todo:
+                    type: string
+                    example: todo
+    
+    UpdatePractitionerInfo:
+      description: Update practitioner object
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              files:
+                type: object
+                properties:
+                  credentialsFront:
+                    type: string
+                    description: the image address of the face of credentials
+                    example: store.legend.law/GUQMDUAOQ8NKQQ
+                  credentialsBack:
+                    type: string
+                    description: the image address of the rear of credentials
+                    example: store.legend.law/WOQKEHXUWIGFDMH
+              personalInfo:
+                $ref: '#/components/schemas/PractitionerPersonalInfo'
+              occupationalInfo:
+                $ref: '#/components/schemas/PractitionerOccupationalInfo'
               bankAccount:
                 type: object
                 properties:
