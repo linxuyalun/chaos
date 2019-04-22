@@ -101,7 +101,7 @@ paths:
       summary: Practitioner logout
       description: ''
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: logout successfully
@@ -125,7 +125,7 @@ paths:
         If a user doesn't pass the real-name authentication,
         user can neither launch a project nor accept a mission
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: information uploaded successfully
@@ -150,7 +150,7 @@ paths:
       summary: view information of a practitioner
       description: viewing other users' information is unpermitted
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: user basic information
@@ -165,8 +165,11 @@ paths:
                     $ref: '#/components/schemas/PractitionerContact'
                   occupational_info:
                     $ref: '#/components/schemas/PractitionerOccupationalInfo'
-                  case_info:
-                    type: object
+                  cases:
+                    description: the cases the practitioner involves
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CaseBasicInfo'
                     
         '401':
           description: User not login
@@ -188,7 +191,7 @@ paths:
         Information can be updated is partial, 
         some information such as name, credentials and so on can't be modyfied.
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: information updated successfully
@@ -220,7 +223,7 @@ paths:
         Practitioners can launch a new case. 
         When a new case is createrd, the remaining workflow is case-driven.
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: initiate the case successfully
@@ -251,7 +254,27 @@ paths:
                 $ref: '#/components/schemas/Error' 
       requestBody:
         $ref: '#/components/requestBodies/CaseInfo'
-        
+  
+  '/cases/{case_id}':
+    get:
+      tags:
+        - cases
+      summary: basic information of the specific case
+      description: >-
+        Basic information of the specific case will be shown.
+        It will return different roll based on the token
+      security:
+        - BearerAuth
+      responses:
+        '200':
+          description: return the basic information of the case
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseBasicInfo'
+                  
+      
+  
   
 components:
   schemas:
@@ -648,7 +671,22 @@ components:
       properties:
         composition_model:
           description: type of the manager composition
-          type: string      
+          type: string
+
+    CaseBasicInfo:
+      type: object
+      properties:
+        case_info:
+          type: string
+          example: todo
+        roll:
+          type: string
+          description: the roll of the case the practitioner in
+          enum:
+            - visitor
+            - manager
+            - todo
+
 
          
   requestBodies:
@@ -755,7 +793,7 @@ components:
                     
 
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
