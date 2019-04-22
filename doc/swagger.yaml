@@ -64,17 +64,7 @@ paths:
       description: ''
       responses:
         '200':
-          description: login successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Login'
-        '400':
-          description: invalid phone number or password.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/NormalResponse'
       requestBody:
         content:
           application/json:
@@ -93,17 +83,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: logout successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageOnly'
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/NormalResponse'
         
   '/practitioners/authentication':
     post:
@@ -117,17 +97,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: information uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageOnly'
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/NormalResponse'
       requestBody:
         $ref: '#/components/requestBodies/PractitionerRealNameAuthentication'
          
@@ -141,37 +111,8 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        '200':
-          description: user basic information
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  personal_info:
-                    $ref: '#/components/schemas/PractitionerPersonalInfo'
-                  contact:
-                    $ref: '#/components/schemas/PractitionerContact'
-                  occupational_info:
-                    $ref: '#/components/schemas/PractitionerOccupationalInfo'
-                  cases:
-                    description: the cases the practitioner involves
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CaseBasicInfo'
-                    
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageOnly'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        '200': 
+          $ref: '#/components/responses/PractitionersProfileResponse'
     put:
       tags: 
         - practitioners
@@ -183,23 +124,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: information updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageOnly'
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error' 
+          $ref: '#/components/responses/NormalResponse'
       requestBody:
         $ref: '#/components/requestBodies/UpdatePractitionerInfo'
   
@@ -212,29 +137,8 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        '200':
-          description: get registration code successfully!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: string
-                    description: the registration code of the practitioner
-                    example: todo
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        '200': 
+          $ref: '#/components/responses/RegistrationCodeResponse'
 
 
   '/cases':
@@ -249,32 +153,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: initiate the case successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: initiate case successfully!
-                  case_id:
-                    description: the only id of the case
-                    type: string
-                    format: uuid
-                    example: 550e8400-e29b-41d4-a716-446655440000
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error' 
+          $ref: '#/components/responses/CreateCaseResponse'
       requestBody:
         $ref: '#/components/requestBodies/CaseInfo'
   
@@ -299,23 +178,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: return the basic information of the case
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CaseBasicInfo'
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error' 
+          $ref: '#/components/responses/CaseInfoResponse'
 
   '/cases/{case_id}/info-table':
     parameters:
@@ -338,29 +201,7 @@ paths:
         Many information of the case will be recoded in the table.     
       responses:
         '200':
-          description: |
-            return the download url of the case information table.
-            url can be nullable.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  download_url:
-                    type: string
-                    nullable: true          
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'   
+          $ref: '#/components/responses/InfoTableResponse'  
     post:
       tags:
         - cases
@@ -371,23 +212,7 @@ paths:
         upload the case information table.   
       responses:
         '200':
-          description: information updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageOnly'   
-        '401':
-          description: User not login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error' 
+          $ref: '#/components/responses/NormalResponse'
       requestBody:
         description: information of initiate a case
         required: true
@@ -399,11 +224,6 @@ paths:
                 case_info_table:
                   type: string
                   description: the case info table url
-
-
-
-
-      
   
   
 components:
@@ -464,6 +284,108 @@ components:
         message:
           type: string
           example: Valid operation!
+    
+    200PractitionersProfile:
+      type: object
+      properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Get practitioners profile successfully!  
+        body:
+          type: object
+          properties:
+            personal_info:
+              $ref: '#/components/schemas/PractitionerPersonalInfo'
+            contact:
+              $ref: '#/components/schemas/PractitionerContact'
+            occupational_info:
+              $ref: '#/components/schemas/PractitionerOccupationalInfo'
+            cases:
+              description: the cases the practitioner involves
+              type: array
+              items:
+                $ref: '#/components/schemas/CaseBasicInfo'
+
+    
+    200RegistrationCode:
+      type: object
+      properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Get case registration code successfully!  
+        body:
+          type: object
+          properties:
+            registration_code:
+              type: string
+              description: the registration code of the practitioner
+              example: todo   
+    
+    200InfoTable:
+      type: object
+      properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Get case info table successfully!
+        body:
+          type: object
+          properties:
+            download_field:
+              description: |
+                The download field of the case information table.
+                field can be nullable.
+              type: string
+              nullable: true   
+
+    200CaseInfo:
+      type: object
+      properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: initiate case successfully!
+        body:
+          $ref: '#/components/schemas/CaseInfo'
+
+    200CaseId:
+      type: object
+      properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: initiate case successfully!
+        body:
+          type: object
+          properties:
+            case_id:
+              description: the only id of the case
+              type: string
+              format: uuid
+              example: 550e8400-e29b-41d4-a716-446655440000  
+
     
     PractitionerPersonalInfo:
       type: object
@@ -941,6 +863,51 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/MessageOnly'
+              - $ref: '#/components/schemas/Error'
+
+    PractitionersProfileResponse:
+      description: the basic information of the practitioners
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200PractitionersProfile'
+              - $ref: '#/components/schemas/Error'
+      
+    RegistrationCodeResponse:
+      description: the registration code of the practitioner
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200InfoTable'
+              - $ref: '#/components/schemas/Error'
+
+    InfoTableResponse:
+      description: case information table response obejct
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200InfoTable'
+              - $ref: '#/components/schemas/Error'
+
+    CaseInfoResponse:
+      description: basic information of the case
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200RegistrationCode'
+              - $ref: '#/components/schemas/Error'
+
+    CreateCaseResponse:
+      description: return the uuid of the case
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200CaseId'
               - $ref: '#/components/schemas/Error'
 
 
