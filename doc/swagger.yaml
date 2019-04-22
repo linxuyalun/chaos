@@ -214,6 +214,40 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/UpdatePractitionerInfo'
   
+  '/practitioners/registration-code':
+    get:
+      tags:
+        - practitioners
+      summary: get practitioner registration code
+      description: get the registration code of the practitioner
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: get registration code successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: the registration code of the practitioner
+                    example: todo
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
   '/cases':
     post:
       tags:
@@ -260,6 +294,15 @@ paths:
       tags:
         - cases
       summary: basic information of the specific case
+      parameters:
+        - name: case_id
+          in: path
+          description: uuid of the case
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
       description: >-
         Basic information of the specific case will be shown.
         It will return different roll based on the token
@@ -272,7 +315,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CaseBasicInfo'
-                  
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+
+  '/cases/{case_id}/info-table':
+    get:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: get the case information table
+      description: >-
+        It will return the download url of the case information table.
+        Many information of the case will be recoded in the table.
+      parameters:
+        - name: case_id
+          in: path
+          description: uuid of the case
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000      
+      responses:
+        '200':
+          description: |
+            return the download url of the case information table.
+            url can be nullable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  download_url:
+                    type: string
+                    nullable: true          
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                   
       
   
   
