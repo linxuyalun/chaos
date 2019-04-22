@@ -264,7 +264,7 @@ paths:
         Basic information of the specific case will be shown.
         It will return different roll based on the token
       security:
-        - BearerAuth
+        - BearerAuth: []
       responses:
         '200':
           description: return the basic information of the case
@@ -677,8 +677,7 @@ components:
       type: object
       properties:
         case_info:
-          type: string
-          example: todo
+          $ref: '#/components/schemas/CaseInfo'
         roll:
           type: string
           description: the roll of the case the practitioner in
