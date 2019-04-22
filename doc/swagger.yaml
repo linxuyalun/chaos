@@ -224,6 +224,51 @@ paths:
                 case_info_table:
                   type: string
                   description: the case info table url
+  '/cases/{case_id}/invitation':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+    post:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: Invite other practitioners to join the project.
+      description: >-
+        When invite other practitioners, the manager also need to assign a role to every practitioner.  
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+      requestBody:
+        description: an array of the practitioner registration code
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                registration_codes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      registration_code:
+                        type: string
+                        example: todo
+                      roll:
+                        description: the roll of the practitioner
+                        type: string
+                        enum:
+                          - manager
+                          - visitor
+                          - other
+              
   
   
 components:
@@ -322,7 +367,7 @@ components:
             - 200
         message:
           type: string
-          example: Get case registration code successfully!  
+          example: Get practitioner registration code successfully!  
         body:
           type: object
           properties:
@@ -880,7 +925,7 @@ components:
         application/json:
           schema:
             oneOf:
-              - $ref: '#/components/schemas/200InfoTable'
+              - $ref: '#/components/schemas/200RegistrationCode'
               - $ref: '#/components/schemas/Error'
 
     InfoTableResponse:
@@ -898,7 +943,7 @@ components:
         application/json:
           schema:
             oneOf:
-              - $ref: '#/components/schemas/200RegistrationCode'
+              - $ref: '#/components/schemas/200CaseInfo'
               - $ref: '#/components/schemas/Error'
 
     CreateCaseResponse:
