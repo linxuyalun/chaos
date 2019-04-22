@@ -488,7 +488,6 @@ components:
               items:
                 $ref: '#/components/schemas/Trustee'
             
-    
     Applicant:
       type: object
       description: the person who want to launch the case
@@ -509,6 +508,148 @@ components:
           description: type of the applicant
           type: string
         
+    Court:
+      type: object
+      description: information of the court
+      properties:
+        name:
+          type: string
+          example: the Higher People's Court of Shanghai
+        address:
+          type: string
+          description: address of the court
+          example: 1200 Hongqiao Road, Changning District, Shanghai, China
+        contact:
+          type: string
+          description: court contact
+          example: "021-34254567"
+        presiding_judge:
+          type: string
+          example: Lin
+        collegial_panel_members:
+          type: string
+          example: Siyuan, Yifan, Cece
+        judge_assistant:
+          type: string
+          example: Kane
+        clerk:
+          type: string
+          example: Rock
+      
+    CaseInfo:
+      description: basic information of the case
+      type: object
+      properties:
+        id:
+          type: string
+          description: the real-world id of the case
+          example: "(2011) the second court No. 92"
+        acceptance_time:
+          type: string
+          description: Acceptance Time Of The Court (Arbitral Authority)
+          example: 2018/08/24
+        first_meeting_point:
+          type: string
+          example: 2019/01/01
+        second_meeting_point:
+          type: string
+          example: 2019/02/02
+        todo:
+          type: string
+          example: todo
+    
+    ManagerInfo:
+      description: basic information of the case manager
+      properties:
+        responsible_body_full_name:
+          type: string
+          description: Full name of the responsible body
+          example: The legend Manager
+        principal:
+          type: string
+          description: the principal of the responsible body
+          example: Batista
+        contact:
+          type: string
+          description: contact of the manager
+          example: "56798420"
+        address:
+          type: string
+          description: the contact address of the manager
+          example: "4 Chome-3-11 Shiba, Minato City, Tokyo 108-0014"
+          
+    LiquidationTeamAsManager:
+      description: The liquidation team is composed of several natural persons, which may be in different companies.
+      allOf:
+        - $ref: '#/components/schemas/ManagerMembers'
+        - type: object
+          properties:
+            liquidation_team_members:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: the name of the liquidation team member
+                    example: Yong
+                  company:
+                    type: string
+                    description: the company the liquidation team member is in
+                    example: alibaba
+
+    SingleAgencyAsManager:
+      description: The manager is actually a single agency.
+      allOf:
+        - $ref: '#/components/schemas/ManagerMembers'
+        - type: object
+          properties:
+            agency_name:
+              type: string
+              example: The legend Agency
+
+    MulAgenciesAsManager:
+      description: The managers are composed of multiple agencies.
+      allOf:
+        - $ref: '#/components/schemas/ManagerMembers'
+        - type: object
+          properties:
+            agencies_name:
+              type: array
+              items:
+                type: string
+                example: the Legend Agency
+    
+    NaturalPersonAsManager:
+      description: The manager is actually a single natural person.
+      allOf:
+        - $ref: '#/components/schemas/ManagerMembers'
+        - type: object
+          properties:
+            name:
+              type: string
+              description: the name of the natural person
+              example: Yong
+            company:
+              type: string
+              description: the company the natural person is in
+              example: alibaba
+    
+    ManagerMembers:      
+      type: object
+      description: the manager composition model and basic information of manager members
+      discriminator:
+        propertyName: composition_model
+        mapping:
+          liquidation_team: '#/components/schemas/LiquidationTeamAsManager'
+          single_agency: '#/components/schemas/SingleAgencyAsManager'
+          mul_agencies: '#/components/schemas/MulAgenciesAsManager'
+          natural_person: '#/components/schemas/NaturalPersonAsManager'
+      properties:
+        composition_model:
+          description: type of the manager composition
+          type: string      
+
          
   requestBodies:
     PractitionerRealNameAuthentication:
@@ -576,7 +717,15 @@ components:
                 $ref: '#/components/schemas/Debtor'
               applicant:
                 $ref: '#/components/schemas/Applicant'
-                
+              court:
+                $ref: '#/components/schemas/Court'
+              case_info:
+                $ref: '#/components/schemas/CaseInfo'
+              manager_info:
+                $ref: '#/components/schemas/ManagerInfo'
+              manager_members:
+                $ref: '#/components/schemas/ManagerMembers'
+              
 
   securitySchemes:
     bearerAuth:
