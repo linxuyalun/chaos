@@ -626,11 +626,11 @@ components:
         - $ref: '#/components/schemas/ManagerMembers'
         - type: object
           properties:
-            name:
+            natural_person_name:
               type: string
               description: the name of the natural person
               example: Yong
-            company:
+            natural_person_company:
               type: string
               description: the company the natural person is in
               example: alibaba
@@ -713,6 +713,21 @@ components:
                   - C
                   - D
                   - E
+              contact:
+                type: object
+                description: the public contact of the case
+                properties:
+                  name:
+                    type: string
+                    description: name of the contact
+                    example: Adam Cole
+                  phone:
+                    type: string
+                    example: "13278302983"
+                  fixed_line:
+                    type: string
+                    example: "021-54678924"
+                    nullable: true
               debtor:
                 $ref: '#/components/schemas/Debtor'
               applicant:
@@ -725,7 +740,19 @@ components:
                 $ref: '#/components/schemas/ManagerInfo'
               manager_members:
                 $ref: '#/components/schemas/ManagerMembers'
-              
+              files:
+                type: object
+                properties:
+                  todo:
+                    type: string
+                    example: todo
+              toll:
+                type: object
+                properties:
+                  todo:
+                    type: string
+                    example: todo
+                    
 
   securitySchemes:
     bearerAuth:
