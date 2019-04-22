@@ -35,7 +35,6 @@ x-tagGroups:
   - name: General
     tags:
       - cases
-      - store
   - name: User Management
     tags:
       - practitioners
@@ -48,17 +47,13 @@ paths:
       description: Create a new user via phone number
       responses:
         '200':
-          description: successsful operation
+          description: response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Login'
-        '400':
-          description: phone number has been registered.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                oneOf:
+                  - $ref: '#/components/schemas/Message'
+                  - $ref: '#/components/schemas/Error'
       requestBody:
         content:
           application/json:
@@ -453,6 +448,13 @@ components:
     Error:
       type: object
       properties:
+        status_code:
+          description: invalid operation
+          type: integer
+          enum:
+            - 401
+            - 403
+            - 409
         message:
           type: string
           example: Invalid operation!
@@ -460,6 +462,10 @@ components:
     Message:
       type: object
       properties:
+        status_code:
+          description: successfull operation
+          type: integer
+          example: 200
         message:
           type: string
           example: Valid operation!
@@ -930,7 +936,7 @@ components:
                   todo:
                     type: string
                     example: todo
-                    
+
 
   securitySchemes:
     BearerAuth:
