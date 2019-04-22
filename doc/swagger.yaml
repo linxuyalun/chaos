@@ -47,13 +47,7 @@ paths:
       description: Create a new user via phone number
       responses:
         '200':
-          description: response
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Message'
-                  - $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/NormalResponse' 
       requestBody:
         content:
           application/json:
@@ -103,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/MessageOnly'
         '401':
           description: User not login
           content:
@@ -127,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/MessageOnly'
         '401':
           description: User not login
           content:
@@ -171,7 +165,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/MessageOnly'
         '403':
           description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
           content:
@@ -193,7 +187,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/MessageOnly'
         '401':
           description: User not login
           content:
@@ -381,7 +375,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'   
+                $ref: '#/components/schemas/MessageOnly'   
         '401':
           description: User not login
           content:
@@ -459,13 +453,14 @@ components:
           type: string
           example: Invalid operation!
     
-    Message:
+    MessageOnly:
       type: object
       properties:
         status_code:
           description: successfull operation
           type: integer
-          example: 200
+          enum:
+            - 200
         message:
           type: string
           example: Valid operation!
@@ -936,6 +931,17 @@ components:
                   todo:
                     type: string
                     example: todo
+
+
+  responses:
+    NormalResponse:
+      description: normal response obejct
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/MessageOnly'
+              - $ref: '#/components/schemas/Error'
 
 
   securitySchemes:
