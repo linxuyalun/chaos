@@ -329,6 +329,15 @@ paths:
                 $ref: '#/components/schemas/Error' 
 
   '/cases/{case_id}/info-table':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000 
     get:
       tags:
         - cases
@@ -337,16 +346,7 @@ paths:
       summary: get the case information table
       description: >-
         It will return the download url of the case information table.
-        Many information of the case will be recoded in the table.
-      parameters:
-        - name: case_id
-          in: path
-          description: uuid of the case
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 550e8400-e29b-41d4-a716-446655440000      
+        Many information of the case will be recoded in the table.     
       responses:
         '200':
           description: |
@@ -371,7 +371,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'                   
+                $ref: '#/components/schemas/Error'   
+    post:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: upload the case information table
+      description: >-
+        upload the case information table.   
+      responses:
+        '200':
+          description: information updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'   
+        '401':
+          description: User not login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: real-name authentication is needed first or user hasn't pass real-name authentication yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+      requestBody:
+        description: information of initiate a case
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                case_info_table:
+                  type: string
+                  description: the case info table url
+
+
+
+
       
   
   
