@@ -239,7 +239,7 @@ paths:
         '200':
           $ref: '#/components/responses/CaseInvitationResponse'
 
-  '/cases/{case_id}/invitation':
+  '/cases/{case_id}/accept':
     parameters:
       - name: case_id
         in: path
@@ -260,6 +260,17 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
+  
+  '/cases/{case_id}/invitation':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
     post:
       tags:
         - cases
@@ -296,6 +307,41 @@ paths:
                           - other
 
 
+  '/creditors/login':
+    post:
+      tags:
+        - creditors
+      summary: Credetor login.
+      description: >-
+        Creditor login. Case id, credentials number and password are needed.
+      responses:
+        '200':
+          $ref: '#/components/responses/RegistrationCodeResponse'
+      requestBody:
+        description: creditor login information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredetorAccount'
+  
+  '/creditors/registeration':
+    post:
+      tags:
+        - creditors
+      summary: Credetor register.
+      description: >-
+        Creditor register.
+      responses:
+        '200':
+          $ref: '#/components/responses/RegistrationCodeResponse'
+      requestBody:
+        description: creditor login information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredetorAccountRegister'
               
   
   
@@ -322,6 +368,120 @@ components:
           pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
           example: drowssaP123
     
+    CredetorAccount:
+      type: object
+      properties:
+        case_id:
+          description: the only id of the case
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        credentials:
+          description: creditor username, can be id-card number or credit number
+          type: string
+          example: "533527198909210238"
+        password:
+          type: string
+          description: Credetor password.
+          format: password
+          example: drowssaP123
+
+    EnterpriseLegalCredetor:
+      description: The credetor type is enterprise legal
+      allOf:
+        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - type: object
+          properties:
+            case_id:
+              description: the only id of the case
+              type: string
+              format: uuid
+              example: 550e8400-e29b-41d4-a716-446655440000
+            legal_name:
+              description: Enterprise legal name.
+              example: Mark Henry
+            legal_credentials:
+              description: credit number of the legal
+              type: string
+              example: "5335271"
+            legal_phone:
+              description: legal cantact number
+              type: string
+              example: "13425683749"
+            password:
+              type: string
+              description: >-
+                User password, MUST contain a mix of upper and lower case letters,
+                as well as digits
+              format: password
+              minLength: 8
+              maxLength: 64
+              pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+              example: drowssaP123
+            todo:
+              type: string
+              example: 法人开户受托人、身份证号、用户协议
+            
+    NaturalPersonCredetor:
+      description: The credetor type is natural person
+      allOf:
+        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - type: object
+          properties:
+            case_id:
+              description: the only id of the case
+              type: string
+              format: uuid
+              example: 550e8400-e29b-41d4-a716-446655440000
+            name:
+              description: Narural person name.
+              example: Mark Henry
+            credentials:
+              description: id card number of the natural person
+              type: string
+              example: "533527198909210238"
+            phone:
+              description: natural person phone number
+              type: string
+              example: "13425683749"
+            password:
+              type: string
+              description: >-
+                User password, MUST contain a mix of upper and lower case letters,
+                as well as digits
+              format: password
+              minLength: 8
+              maxLength: 64
+              pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+              example: drowssaP123
+            todo:
+              type: string
+              example: 用户协议            
+            
+    
+    CredetorAccountRegister:
+      type: object
+      discriminator:
+        propertyName: credetor_type
+        mapping:
+          enterprise-legal: '#/components/schemas/NaturalPersonCredetor'
+          natural-person: '#/components/schemas/Dog'
+      properties:
+        claim_declaration_agreement:
+          description: >-
+            If a Credetor wants to register, he/she must agree the claim declaration agreement
+            0 represents unagree, 1 represents agree
+          type: integer
+          enum:
+            - 0
+            - 1
+        credetor_type:
+          type: string
+          enum:
+            - enterprise-legal
+            - natural-person
+            
+
     Login:
       type: object
       properties:
@@ -470,18 +630,21 @@ components:
         message:
           type: string
           example: receive invitation successfully!
-        case_info:
-          type: array
-          nullable: true
-          items:
-            allOf:
-              - type: object
-                properties:
-                  case_id:
-                    type: string
-                    format: uuid
-                    example: 550e8400-e29b-41d4-a716-446655440000
-              - $ref: '#/components/schemas/CaseInfo'
+        body:
+          type: object
+          properties:          
+            case_info:
+              type: array
+              nullable: true
+              items:
+                allOf:
+                  - type: object
+                    properties:
+                      case_id:
+                        type: string
+                        format: uuid
+                        example: 550e8400-e29b-41d4-a716-446655440000
+                  - $ref: '#/components/schemas/CaseInfo'
 
     
     PractitionerPersonalInfo:
