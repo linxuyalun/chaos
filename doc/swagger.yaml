@@ -224,6 +224,21 @@ paths:
                 case_info_table:
                   type: string
                   description: the case info table url
+
+  '/cases/invitation':  
+    get:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: Return all the cases the practitioner invited.
+      description: >-
+        A practitioner can receive the invitation and check the case basic information. 
+        This will return the cases the practitioner hasn't passed the invitation yet.
+      responses:
+        '200':
+          $ref: '#/components/responses/CaseInvitationResponse'
+
   '/cases/{case_id}/invitation':
     parameters:
       - name: case_id
@@ -234,6 +249,17 @@ paths:
           type: string
           format: uuid
           example: 550e8400-e29b-41d4-a716-446655440000
+    get:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: The practitioner accept the invitation.
+      description: >-
+        A practitioner accept the invitation
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
     post:
       tags:
         - cases
@@ -268,19 +294,7 @@ paths:
                           - manager
                           - visitor
                           - other
-  '/cases/invitation':  
-    get:
-      tags:
-        - cases
-      security:
-        - BearerAuth: []
-      summary: Return all the cases the practitioner invited.
-      description: >-
-        A practitioner can receive the invitation and check the case basic information. 
-        This will return all the cases the practitioner invited.
-      responses:
-        '200':
-          $ref: '#/components/responses/CaseInvitationResponse'
+
 
               
   
@@ -460,7 +474,14 @@ components:
           type: array
           nullable: true
           items:
-            $ref: '#/components/schemas/CaseInfo'
+            allOf:
+              - type: object
+                properties:
+                  case_id:
+                    type: string
+                    format: uuid
+                    example: 550e8400-e29b-41d4-a716-446655440000
+              - $ref: '#/components/schemas/CaseInfo'
 
     
     PractitionerPersonalInfo:
