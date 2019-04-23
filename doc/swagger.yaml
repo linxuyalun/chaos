@@ -464,8 +464,8 @@ components:
       discriminator:
         propertyName: credetor_type
         mapping:
-          enterprise-legal: '#/components/schemas/NaturalPersonCredetor'
-          natural-person: '#/components/schemas/Dog'
+          enterprise-legal: '#/components/schemas/EnterpriseLegalCredetor'
+          natural-person: '#/components/schemas/NaturalPersonCredetor'
       properties:
         claim_declaration_agreement:
           description: >-
