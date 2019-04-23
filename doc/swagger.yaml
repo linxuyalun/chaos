@@ -23,14 +23,14 @@ info:
 tags:
   - name: practitioners
     description: Operations about practitioner, a practitioner is a person to launch a case and manage it
+  - name: creditors
+    description: >-
+      A creditor id in different cases can be the same. 
   - name: cases
     description: >-
       A bankruptcy case is created by a practitioner, and every case is unique.
       All information can be seen in the case.
-  - name: store
-    description: Access to Petstore orders
-  - name: user
-    description: Operations about user
+
 x-tagGroups:
   - name: General
     tags:
@@ -38,6 +38,7 @@ x-tagGroups:
   - name: User Management
     tags:
       - practitioners
+      - creditors
 paths:
   '/practitioners/registeration':
     post:
@@ -101,7 +102,6 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/PractitionerRealNameAuthentication'
          
-  
   '/practitioners/profile':
     get:
       tags: 
@@ -239,7 +239,7 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: Invite other practitioners to join the project.
+      summary: Invite other practitioners to join the case.
       description: >-
         When invite other practitioners, the manager also need to assign a role to every practitioner.  
       responses:
@@ -268,6 +268,20 @@ paths:
                           - manager
                           - visitor
                           - other
+  '/cases/invitation':  
+    get:
+      tags:
+        - cases
+      security:
+        - BearerAuth: []
+      summary: Return all the cases the practitioner invited.
+      description: >-
+        A practitioner can receive the invitation and check the case basic information. 
+        This will return all the cases the practitioner invited.
+      responses:
+        '200':
+          $ref: '#/components/responses/CaseInvitationResponse'
+
               
   
   
@@ -322,7 +336,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -334,7 +348,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -361,7 +375,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -380,7 +394,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -401,7 +415,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -415,7 +429,7 @@ components:
       type: object
       properties:
         status_code:
-          description: successfull operation
+          description: successful operation
           type: integer
           enum:
             - 200
@@ -430,6 +444,23 @@ components:
               type: string
               format: uuid
               example: 550e8400-e29b-41d4-a716-446655440000  
+    
+    200RecieveInvitationResponse:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: receive invitation successfully!
+        case_info:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/CaseInfo'
 
     
     PractitionerPersonalInfo:
@@ -936,7 +967,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/200InfoTable'
               - $ref: '#/components/schemas/Error'
-
+    
     CaseInfoResponse:
       description: basic information of the case
       content:
@@ -953,6 +984,15 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/200CaseId'
+              - $ref: '#/components/schemas/Error'
+    
+    CaseInvitationResponse:
+      description: return the invitation response, including case basic information.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200RecieveInvitationResponse'
               - $ref: '#/components/schemas/Error'
 
 
