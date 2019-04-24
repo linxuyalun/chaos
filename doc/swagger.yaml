@@ -342,7 +342,47 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CredetorAccountRegister'
-              
+
+  '/creditors/logout':
+    get:
+      tags:
+        - creditors
+      summary: Creditor logout
+      description: ''
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+  
+  '/creditors/{case_id}/claim-information':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+    post:
+      tags:
+        - creditors
+      summary: Creditor adds claim information
+      description: Add claim information of a creditor
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+      requestBody:
+        description: creditor claim information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredetorAccountRegister'
+                    
   
   
 components:
@@ -392,11 +432,6 @@ components:
         - $ref: '#/components/schemas/CredetorAccountRegister'
         - type: object
           properties:
-            case_id:
-              description: the only id of the case
-              type: string
-              format: uuid
-              example: 550e8400-e29b-41d4-a716-446655440000
             legal_name:
               description: Enterprise legal name.
               example: Mark Henry
@@ -428,11 +463,6 @@ components:
         - $ref: '#/components/schemas/CredetorAccountRegister'
         - type: object
           properties:
-            case_id:
-              description: the only id of the case
-              type: string
-              format: uuid
-              example: 550e8400-e29b-41d4-a716-446655440000
             name:
               description: Narural person name.
               example: Mark Henry
@@ -456,8 +486,7 @@ components:
               example: drowssaP123
             todo:
               type: string
-              example: 用户协议            
-            
+              example: 用户协议                    
     
     CredetorAccountRegister:
       type: object
@@ -475,12 +504,16 @@ components:
           enum:
             - 0
             - 1
+        case_id:
+          description: the only id of the case
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
         credetor_type:
           type: string
           enum:
             - enterprise-legal
-            - natural-person
-            
+            - natural-person           
 
     Login:
       type: object
@@ -491,7 +524,8 @@ components:
         token:
           type: string
           example: Header.Payload.Signature
-    
+
+
     Error:
       type: object
       properties:
@@ -517,7 +551,7 @@ components:
         message:
           type: string
           example: Valid operation!
-    
+   
     200PractitionersProfile:
       type: object
       properties:
@@ -543,7 +577,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/CaseBasicInfo'
-
     
     200RegistrationCode:
       type: object
@@ -720,7 +753,7 @@ components:
         address:
           type: string
           description: address is the address of the registered address of the company
-          example: Shanghai Jiaotong University
+          example: 800 Dongchuan Road, Minhang District, Shanghai, China
         business_scope:
           type: string
           example: clothes
@@ -777,7 +810,7 @@ components:
         address:
           type: string
           description: address is the address of the trustee
-          example: Shanghai Jiaotong University
+          example: 800 Dongchuan Road, Minhang District, Shanghai, China
         
     
     CompanyApplicant:
@@ -800,7 +833,7 @@ components:
             address:
               type: string
               description: address is the address of the registered address of the company
-              example: Shanghai Jiaotong University
+              example: 800 Dongchuan Road, Minhang District, Shanghai, China
             company_contact:
               type: string
               example: "5385470"
@@ -827,7 +860,7 @@ components:
             address:
               type: string
               description: address is the address of the natural person
-              example: Shanghai Jiaotong University
+              example: 800 Dongchuan Road, Minhang District, Shanghai, China
             trustees:
               type: array
               minLength: 1
@@ -1010,6 +1043,68 @@ components:
             - manager
             - todo
 
+    CompanyClaimInfo:
+      type: object
+      properties:
+        company:
+          description: information of the company
+          type: object
+          properties:
+            type:
+              type: string
+              example: clothes
+            address:
+              type: string
+              example: 800 Dongchuan Road, Minhang District, Shanghai, China
+            email:
+              type: string
+              example: alibaba@alimama.com
+            fax_number:
+              type: string
+              example: "0592-88887777"
+        legal_representative:
+          description: information of the legal
+          type: object
+          properties:
+            name:
+              type: string
+              example: Randy Orton
+            position:
+              type: string
+              example: CFO
+            credentials_number:
+              type: string
+              description: credentials' number
+              example: "533527198909210238"
+            phone:
+              type: string
+              example: "13325473479"
+              nullable: true
+            fixed_line:
+              type: string
+              example: "021-54678924"
+              nullable: true
+            address:
+              type: string
+              example: 800 Dongchuan Road, Minhang District, Shanghai, China         
+
+    NaturalPersonClaimInfo:
+      type: object
+      properties:
+        address:
+          type: string
+          example: 800 Dongchuan Road, Minhang District, Shanghai, China
+        phone:
+          type: string
+          description: |
+            it's strange here. 
+            When creditor registers, he/she needs to fill in phone
+            Needs to be confirmed.
+          example: Needs to be confirmed.
+        email:
+          type: string
+          example: alibaba@alimama.com
+
 
          
   requestBodies:
@@ -1057,6 +1152,67 @@ components:
                 $ref: '#/components/schemas/PractitionerContact'
               occupational_info:
                 $ref: '#/components/schemas/PractitionerOccupationalInfo'
+    
+    CredetorClaimInfo:
+      description: >-
+        Claim information of a credetor. 
+        A case may have many credetors.
+        Every credetor in a case has claim information.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            allOf:
+              - type: object
+                properties:
+                  credetor_specific_type:
+                    description: specific type of a credetor, multiple choice.
+                    type: array
+                    minLength: 1
+                    items:
+                      type: string
+                      enum: 
+                        - financing
+                        - operating
+                        - public-utility
+                        - intermediary-service
+                        - others
+                        - todo
+                  trustees:
+                    type: array
+                    nullable: true
+                    description: Needs to be confirmed.
+                    items:
+                      type: string
+                      example: todo
+                  bank_account:
+                    type: object
+                    description: bank account information of a credetor
+                    properties:
+                      beneficiary:
+                        type: string
+                        description: |
+                          Beneficiary is the bank account name.
+                          By default the beneficiary is the same as company name or natural person name.
+                          If the credetor is natural person, beneficiary must be the same as natural person name.
+                          If the credetor is company, beneficiary can be different.
+                          Back end needs to specially mark this situation.
+                      bank:
+                        type: string
+                        example: Bank of China, Chengjiang Office
+                      bank_code:
+                        type: string
+                        example: "305100001016"
+                      account_number:
+                        type: string
+                        example: "33265805054885"
+              - oneOf:
+                - $ref: '#/components/schemas/CompanyClaimInfo'
+                - $ref: '#/components/schemas/NaturalPersonClaimInfo'
+
+    
+
 
     CaseInfo:
       description: information of initiate a case
