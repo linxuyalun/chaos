@@ -376,12 +376,7 @@ paths:
         '200':
           $ref: '#/components/responses/NormalResponse'
       requestBody:
-        description: creditor claim information
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/CredetorClaimInfo'
+        $ref: '#/components/requestBodies/CredetorClaimInfo'
                     
   
   
