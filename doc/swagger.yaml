@@ -48,7 +48,7 @@ paths:
       description: Create a new user via phone number
       responses:
         '200':
-          $ref: '#/components/responses/NormalResponse' 
+          $ref: '#/components/responses/TokenResponse' 
       requestBody:
         content:
           application/json:
@@ -65,7 +65,7 @@ paths:
       description: ''
       responses:
         '200':
-          $ref: '#/components/responses/NormalResponse'
+          $ref: '#/components/responses/TokenResponse'
       requestBody:
         content:
           application/json:
@@ -316,7 +316,7 @@ paths:
         Creditor login. Case id, credentials number and password are needed.
       responses:
         '200':
-          $ref: '#/components/responses/RegistrationCodeResponse'
+          $ref: '#/components/responses/TokenResponse'
       requestBody:
         description: creditor login information
         required: true
@@ -334,7 +334,7 @@ paths:
         Creditor register.
       responses:
         '200':
-          $ref: '#/components/responses/RegistrationCodeResponse'
+          $ref: '#/components/responses/TokenResponse'
       requestBody:
         description: creditor login information
         required: true
