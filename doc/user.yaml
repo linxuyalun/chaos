@@ -1,0 +1,581 @@
+openapi: 3.0.0
+
+servers:
+  - url: //example.legend.io/api/v1
+    description: Default server
+info:
+  description: |
+    # Introduction
+    User management API Spec for the legend, naive now. 
+  version: "0.0.2"
+  title: The Legend
+  contact:
+    name: User Management API Support
+    email: xuylin@sjtu.edu.cn
+    url: 'https://github.com/linxuyalun'
+  x-logo:
+    url: 'http://www.bjpaa.org/uploads/allimg/160513/1-160513164F90-L.jpg'
+    altText: The Legned logo
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+tags:
+  - name: practitioners
+    description: Operations about practitioner, a practitioner is a person to launch a case and manage it
+  - name: creditors
+    description: >-
+      A creditor id in different cases can be the same. 
+
+paths:
+  '/practitioners/registeration':
+    post:
+      tags:
+        - practitioners
+      summary: Create a new practitioner
+      description: Create a new user via phone number
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse' 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+        description: Created user object
+        required: true
+        
+  '/practitioners/login':
+    post:
+      tags:
+        - practitioners
+      summary: Practitioner login
+      description: ''
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+        description: Created user object
+        required: true               
+  
+  '/practitioners/logout':
+    get:
+      tags:
+        - practitioners
+      summary: Practitioner logout
+      description: ''
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+        
+  '/practitioners/authentication':
+    post:
+      tags:
+        - practitioners
+      summary: Practitioner real-name authentication
+      description: |
+        If a user doesn't pass the real-name authentication,
+        user can neither launch a project nor accept a mission
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/PractitionerRealNameAuthentication'
+         
+  '/practitioners/profile':
+    get:
+      tags: 
+        - practitioners
+      summary: view information of a practitioner
+      description: viewing other users' information is unpermitted
+      security:
+        - BearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/PractitionersProfileResponse'
+    put:
+      tags: 
+        - practitioners
+      summary: update information of a practitioner
+      description: >-
+        Information can be updated is partial, 
+        some information such as name, credentials and so on can't be modyfied.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePractitionerInfo'
+  
+  '/practitioners/registration-code':
+    get:
+      tags:
+        - practitioners
+      summary: get practitioner registration code
+      description: get the registration code of the practitioner
+      security:
+        - BearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/RegistrationCodeResponse'
+
+  '/creditors/login':
+    post:
+      tags:
+        - creditors
+      summary: Credetor login.
+      description: >-
+        Creditor login. Case id, credentials number and password are needed.
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse'
+      requestBody:
+        description: creditor login information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredetorAccount'
+  
+  '/creditors/registeration':
+    post:
+      tags:
+        - creditors
+      summary: Credetor register.
+      description: >-
+        Creditor register.
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse'
+      requestBody:
+        description: creditor login information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredetorAccountRegister'
+
+  '/creditors/logout':
+    get:
+      tags:
+        - creditors
+      summary: Creditor logout
+      description: ''
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+  
+  
+components:
+  schemas:
+    Account:
+      type: object
+      required:
+        - phone
+        - password
+      properties:
+        phone:
+          description: must be your personal number
+          type: string
+          example: "18686862323"
+        password:
+          type: string
+          description: >-
+            User password, MUST contain a mix of upper and lower case letters,
+            as well as digits
+          format: password
+          minLength: 8
+          maxLength: 64
+          pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+          example: drowssaP123
+    
+    CredetorAccount:
+      type: object
+      properties:
+        case_id:
+          description: the only id of the case
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        credentials:
+          description: creditor username, can be id-card number or credit number
+          type: string
+          example: "533527198909210238"
+        password:
+          type: string
+          description: Credetor password.
+          format: password
+          example: drowssaP123
+
+    EnterpriseLegalCredetor:
+      description: The credetor type is enterprise legal
+      allOf:
+        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - type: object
+          properties:
+            legal_name:
+              description: Enterprise legal name.
+              example: Mark Henry
+            legal_credentials:
+              description: credit number of the legal
+              type: string
+              example: "5335271"
+            legal_phone:
+              description: legal cantact number
+              type: string
+              example: "13425683749"
+            password:
+              type: string
+              description: >-
+                User password, MUST contain a mix of upper and lower case letters,
+                as well as digits
+              format: password
+              minLength: 8
+              maxLength: 64
+              pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+              example: drowssaP123
+            todo:
+              type: string
+              example: 法人开户受托人、身份证号、用户协议
+            
+    NaturalPersonCredetor:
+      description: The credetor type is natural person
+      allOf:
+        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - type: object
+          properties:
+            name:
+              description: Narural person name.
+              example: Mark Henry
+            credentials:
+              description: id card number of the natural person
+              type: string
+              example: "533527198909210238"
+            phone:
+              description: natural person phone number
+              type: string
+              example: "13425683749"
+            password:
+              type: string
+              description: >-
+                User password, MUST contain a mix of upper and lower case letters,
+                as well as digits
+              format: password
+              minLength: 8
+              maxLength: 64
+              pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
+              example: drowssaP123
+            todo:
+              type: string
+              example: 用户协议                    
+    
+    CredetorAccountRegister:
+      type: object
+      discriminator:
+        propertyName: credetor_type
+        mapping:
+          enterprise-legal: '#/components/schemas/EnterpriseLegalCredetor'
+          natural-person: '#/components/schemas/NaturalPersonCredetor'
+      properties:
+        claim_declaration_agreement:
+          description: >-
+            If a Credetor wants to register, he/she must agree the claim declaration agreement
+            0 represents unagree, 1 represents agree
+          type: integer
+          enum:
+            - 0
+            - 1
+        case_id:
+          description: the only id of the case
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        credetor_type:
+          type: string
+          enum:
+            - enterprise-legal
+            - natural-person           
+
+    Login:
+      type: object
+      properties:
+        status_code:
+          description: invalid operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Login successfully!
+        body:
+          type: object
+          properties:
+            token:
+              type: string
+              example: Header.Payload.Signature
+
+    Error:
+      type: object
+      properties:
+        status_code:
+          description: invalid operation
+          type: integer
+          enum:
+            - 401
+            - 403
+            - 409
+        message:
+          type: string
+          example: Invalid operation!
+    
+    MessageOnly:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Valid operation!
+   
+    PractitionerPersonalInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: user real name
+          example: Randy Orton
+        credentials_type:
+          type: string
+          description: credentials type
+          enum:
+            - id-card
+            - others
+        credentials_number:
+          type: string
+          description: credentials' number
+          example: "533527198909210238"
+
+    PractitionerContact:
+      type: object
+      properties:
+        address:
+          type: string
+          description: user contact address
+          example: Shanghai Jiaotong University
+        mail:
+          type: string
+          format: email
+          description: the email address to contact
+    
+    PractitionerOccupationalInfo:
+      type: object
+      properties:
+        company:
+          type: string
+          description: the company user works for
+          example: alibaba
+        legal_representative:
+          type: string
+          description: the legal representative name for the company
+          example: john cena
+        company_contact:
+          type: string
+          description: the phone number of the company
+        identity:
+          type: string
+          description: the identity of the industry user works in
+          enum:
+            - judge
+            - lawyer
+            - accountant
+            - liquidator
+            - financial-consultant
+            - business-management
+            - others
+        position:
+          type: string
+          description: the position user in
+          example: project manager
+
+    CaseInfo:
+      description: basic information of the case
+      type: object
+      properties:
+        id:
+          type: string
+          description: the real-world id of the case
+          example: "(2011) the second court No. 92"
+        acceptance_time:
+          type: string
+          description: Acceptance Time Of The Court (Arbitral Authority)
+          example: 2018/08/24
+        first_meeting_point:
+          type: string
+          example: 2019/01/01
+        second_meeting_point:
+          type: string
+          example: 2019/02/02
+        todo:
+          type: string
+          example: todo
+
+    CaseBasicInfo:
+      type: object
+      properties:
+        case_info:
+          $ref: '#/components/schemas/CaseInfo'
+        roll:
+          type: string
+          description: the roll of the case the practitioner in
+          enum:
+            - visitor
+            - manager
+            - todo
+
+    200PractitionersProfile:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Get practitioners profile successfully!  
+        body:
+          type: object
+          properties:
+            personal_info:
+              $ref: '#/components/schemas/PractitionerPersonalInfo'
+            contact:
+              $ref: '#/components/schemas/PractitionerContact'
+            occupational_info:
+              $ref: '#/components/schemas/PractitionerOccupationalInfo'
+            cases:
+              description: the cases the practitioner involves
+              type: array
+              items:
+                $ref: '#/components/schemas/CaseBasicInfo'
+    
+    200RegistrationCode:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: Get practitioner registration code successfully!  
+        body:
+          type: object
+          properties:
+            registration_code:
+              type: string
+              description: the registration code of the practitioner
+              example: todo 
+         
+  requestBodies:
+    PractitionerRealNameAuthentication:
+      description: Created practitioner object
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              files:
+                type: object
+                properties:
+                  credentials_front:
+                    type: string
+                    description: the image address of the face of credentials
+                    example: store.legend.law/GUQMDUAOQ8NKQQ
+                  credentials_back:
+                    type: string
+                    description: the image address of the rear of credentials
+                    example: store.legend.law/WOQKEHXUWIGFDMH
+              personal_info:
+                $ref: '#/components/schemas/PractitionerPersonalInfo'
+              contact:
+                $ref: '#/components/schemas/PractitionerContact'
+              occupational_info:
+                $ref: '#/components/schemas/PractitionerOccupationalInfo'
+              bank_account:
+                type: object
+                properties:
+                  todo:
+                    type: string
+                    example: todo
+
+    UpdatePractitionerInfo:
+      description: Update practitioner object
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              contact:
+                $ref: '#/components/schemas/PractitionerContact'
+              occupational_info:
+                $ref: '#/components/schemas/PractitionerOccupationalInfo'
+
+  responses:
+    TokenResponse:
+      description: normal response obejct
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Login'
+              - $ref: '#/components/schemas/Error'
+
+    NormalResponse:
+      description: normal response obejct
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/MessageOnly'
+              - $ref: '#/components/schemas/Error'
+
+    PractitionersProfileResponse:
+      description: the basic information of the practitioners
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200PractitionersProfile'
+              - $ref: '#/components/schemas/Error'
+
+    RegistrationCodeResponse:
+      description: the registration code of the practitioner
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200RegistrationCode'
+              - $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
