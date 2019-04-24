@@ -378,7 +378,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CredetorClaimInfo'
                     
-  '/cases/{case_id}/credetors/bonds-evidence':
+  '/cases/{case_id}/credetors/claim-evidence':
     parameters:
       - name: case_id
         in: path
@@ -546,9 +546,12 @@ components:
         message:
           type: string
           example: Login successfully!
-        token:
-          type: string
-          example: Header.Payload.Signature
+        body:
+          type: object
+          properties:
+            token:
+              type: string
+              example: Header.Payload.Signature
 
 
     Error:
