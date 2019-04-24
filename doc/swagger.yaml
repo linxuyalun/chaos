@@ -355,7 +355,7 @@ paths:
         '200':
           $ref: '#/components/responses/NormalResponse'
   
-  '/creditors/{case_id}/claim-information':
+  '/cases/{case_id}/credetors/claim-information':
     parameters:
       - name: case_id
         in: path
@@ -367,8 +367,8 @@ paths:
           example: 550e8400-e29b-41d4-a716-446655440000
     post:
       tags:
-        - creditors
-      summary: Creditor adds claim information
+        - cases
+      summary: 5.2 Creditor adds claim information
       description: Add claim information of a creditor
       security:
         - BearerAuth: []
@@ -378,6 +378,31 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CredetorClaimInfo'
                     
+  '/cases/{case_id}/credetors/bonds-evidence':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+    post:
+      tags:
+        - cases
+      summary: 5.3 Creditor adds claim evidence.
+      description: |
+        Add claim evidence of a creditor
+        There may be several documents, and each document's format is the same.
+        Back end needs to generate an id for every claim evidence doc.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/CredetorClaimEvidence'
   
   
 components:
@@ -513,6 +538,11 @@ components:
     Login:
       type: object
       properties:
+        status_code:
+          description: invalid operation
+          type: integer
+          enum:
+            - 200
         message:
           type: string
           example: Login successfully!
@@ -1074,7 +1104,6 @@ components:
             phone:
               type: string
               example: "13325473479"
-              nullable: true
             fixed_line:
               type: string
               example: "021-54678924"
@@ -1202,11 +1231,76 @@ components:
                       account_number:
                         type: string
                         example: "33265805054885"
+                      files:
+                        type: object
+                        properties:
+                          todo:
+                            example: todo
               - oneOf:
                 - $ref: '#/components/schemas/CompanyClaimInfo'
                 - $ref: '#/components/schemas/NaturalPersonClaimInfo'
 
-    
+    CredetorClaimEvidence:
+      description: >-
+        The credetor fills in the claim evidence document.
+        There may be several documents, and each document's format is the same.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              claim_property:
+                type: string
+                enum:
+                  - normal-claim
+                  - property-secured-claim
+                  - tax-claim
+                  - employee-claim
+                  - others
+              claim_amount:
+                type: object
+                properties:
+                  currency:
+                    type: string
+                    default: rmb
+                  principal:
+                    type: string
+                    example: 10,000,000
+                  interest:
+                    type: string
+                    example: "0.005"
+                  liquidated_damages:
+                    type: string
+                    example: "8792"
+                  litigation_costs:
+                    type: string
+                    example: "100"
+                  laywer_fee:
+                    type: string
+                    example: "100.99"
+                  execution_fee:
+                    type: string
+                    example: "200"
+                  others:
+                    type: string
+                    example: "100"
+              contract_situation:
+                type: object
+                properties:
+                  todo:
+                    example: todo
+              todo:
+                example: 财产担保情况, 有无诉讼或仲裁, 有无查封冻结
+              files:
+                description: the corresponding file of the above
+                type: object
+                properties:
+                  todo:
+                    example: todo, 具体要上传的文件待确定
+
+                  
+
 
 
     CaseInfo:
@@ -1274,6 +1368,15 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/MessageOnly'
+              - $ref: '#/components/schemas/Error'
+
+    TokenResponse:
+      description: normal response obejct
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Login'
               - $ref: '#/components/schemas/Error'
 
     PractitionersProfileResponse:
