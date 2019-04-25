@@ -241,6 +241,31 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CredetorClaimEvidence'
   
+  '/cases/{case_id}/practitioners/manager/get-claim-evidences':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+    get:
+      tags:
+        - cases
+      summary: 6.3 Return claim evidences of the case
+      description: |
+        A manager needs to check credetors' claim evidences.
+        To do so, back end should first check the corresponding credetors of a spec manager.
+        Then return all claim evidences of the credetor.
+        Note that every manager has different credetors.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ClaimEvidenceListResponse'    
+  
   
 components:
   schemas:
@@ -352,6 +377,30 @@ components:
                         example: 550e8400-e29b-41d4-a716-446655440000
                   - $ref: '#/components/schemas/CaseInfo'
      
+    200ClaimEvidenceListResponse:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: receive invitation successfully!
+        body:
+          type: object
+          properties:
+            redectors:
+              type: array
+              nullable: true
+              items:
+                type: object
+                properties:
+                  todo:
+                    example: todo
+                  
+    
     Debtor:
       type: object
       properties:
@@ -887,7 +936,7 @@ components:
 
   responses:
     NormalResponse:
-      description: normal response obejct
+      description: normal response object
       content:
         application/json:
           schema:
@@ -896,7 +945,7 @@ components:
               - $ref: '#/components/schemas/Error'
 
     InfoTableResponse:
-      description: case information table response obejct
+      description: case information table response object
       content:
         application/json:
           schema:
@@ -931,6 +980,14 @@ components:
               - $ref: '#/components/schemas/200RecieveInvitationResponse'
               - $ref: '#/components/schemas/Error'
 
+    ClaimEvidenceListResponse:
+      description: return the credetors' list response.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200ClaimEvidenceListResponse'
+              - $ref: '#/components/schemas/Error'
 
   securitySchemes:
     BearerAuth:
