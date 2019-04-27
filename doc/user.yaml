@@ -32,7 +32,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: Create a new practitioner
+      summary: 2.1 Create a new practitioner
       description: Create a new user via phone number
       responses:
         '200':
@@ -49,7 +49,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: Practitioner login
+      summary: 2.1 Practitioner login
       description: ''
       responses:
         '200':
@@ -66,7 +66,7 @@ paths:
     get:
       tags:
         - practitioners
-      summary: Practitioner logout
+      summary: 2.1 Practitioner logout
       description: ''
       security:
         - BearerAuth: []
@@ -78,7 +78,7 @@ paths:
     post:
       tags:
         - practitioners
-      summary: Practitioner real-name authentication
+      summary: 2.2 Practitioner real-name authentication
       description: |
         If a user doesn't pass the real-name authentication,
         user can neither launch a project nor accept a mission
@@ -94,8 +94,8 @@ paths:
     get:
       tags: 
         - practitioners
-      summary: view information of a practitioner
-      description: viewing other users' information is unpermitted
+      summary: 2.2 View information of a practitioner
+      description: Viewing other users' information is unpermitted
       security:
         - BearerAuth: []
       responses:
@@ -104,7 +104,7 @@ paths:
     put:
       tags: 
         - practitioners
-      summary: update information of a practitioner
+      summary: 2.2 Update information of a practitioner
       description: >-
         Information can be updated is partial, 
         some information such as name, credentials and so on can't be modyfied.
@@ -120,8 +120,9 @@ paths:
     get:
       tags:
         - practitioners
-      summary: get practitioner registration code
-      description: get the registration code of the practitioner
+      deprecated: true
+      summary: 2.1 Get practitioner registration code
+      description: Get the registration code of the practitioner
       security:
         - BearerAuth: []
       responses:
@@ -132,7 +133,7 @@ paths:
     post:
       tags:
         - creditors
-      summary: Credetor login.
+      summary: 5.1 Credetor login.
       description: >-
         Creditor login. Case id, credentials number and password are needed.
       responses:
@@ -150,7 +151,7 @@ paths:
     post:
       tags:
         - creditors
-      summary: Credetor register.
+      summary: 5.1 Credetor register.
       description: >-
         Creditor register.
       responses:
@@ -168,7 +169,7 @@ paths:
     get:
       tags:
         - creditors
-      summary: Creditor logout
+      summary: 5.1 Creditor logout
       description: ''
       security:
         - BearerAuth: []
