@@ -7,7 +7,44 @@ info:
   description: |
     # Introduction
     Cases API Spec for the legend, naive now. 
-  version: "0.0.2"
+
+    # Vocabulary List
+
+    This list is used to ensure the strong consistency of the fields in API, and try not to make developers fall into chaos.
+
+    Note that some fields **have the same name with different type**.
+
+    *&XXX means the file path of XXX*
+
+    | EN                     | Type   | CH                   | EN                         | Type   | CH             |
+    | ---------------------- | ------ | -------------------- | -------------------------- | ------ | -------------- |
+    | case_type              | String | 案件类型             | contact                    | Object | 联系人         |
+    | name                   | String | 姓名，名称           | phone                      | String | 电话           |
+    | fixed_line             | String | 固定电话             | address                    | String | 地址           |
+    | debtor                 | Object | 债务人               | company                    | String | 企业名称       |
+    | credit_number          | String | 企业信用号           | business_scope             | String | 经营范围       |
+    | registered_capital     | String | 注册资本             | subscribed_capital         | String | 实缴资本       |
+    | establishment_day      | String | 成立日期             | company_fixed_line         | String | 企业联系电话   |
+    | registration_authority | String | 登记机关             | legal_representative       | Object | 企业法定代表人 |
+    | applicant              | Object | 申请人               | application_type           | String | 申请人类型     |
+    | trustee                | Object | 受托人               | credentials_number         | String | 个人证件号     |
+    | trustees               | Array  | 受托人（复数）       | court                      | Object | 法院           |
+    | presiding_judge        | Object | 主审法官             | collegial_panel_members    | Array  | 合议庭成员     |
+    | judge_assistants       | Array  | 法官助理             | clerks                     | Array  | 书记员         |
+    | case_info              | Object | 案件信息             | case_real_id               | String | 受理案号       |
+    | acceptance_time        | String | 受理时间             | legal_representative       | String | 企业法定代表人 |
+    | first_meeting_point    | String | 一次会时点           | second_meeting_point       | String | 二次会时点     |
+    | manager_info           | Object | 管理人信息           | responsible_body_full_name | String | 责任主体全称   |
+    | principal              | String | 管理人负责人         | manager_members            | Object | 管理人成员     |
+    | composition_model      | String | 管理人构成模式       | liquidation_team_members   | Array  | 清算组成员     |
+    | agencies_name          | Array  | 多中介机构名称       | liquidation-team           | Value  | 清算组         |
+    | single-agency          | Value  | 单一中介机构         | mul-agencies               | Value  | 多个中介机构   |
+    | natural-person         | Value  | 自然人               | toll                       | Object | 收费           |
+    | case_id                | uuid   | 案件的唯一id         | case_info_table            | String | *&案件信息表*  |
+    | cases_info             | Array  | 案件基本信息（复数） |                            |        |                |
+
+
+  version: "0.1.0"
   title: The Legend
   contact:
     name: API Support
@@ -47,7 +84,7 @@ paths:
     get:
       tags:
         - cases
-      summary: basic information of the specific case
+      summary: 3.5 Basic information of the specific case
       parameters:
         - name: case_id
           in: path
@@ -81,7 +118,7 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: get the case information table
+      summary: 3.4 Get the case information table
       description: >-
         It will return the download url of the case information table.
         Many information of the case will be recoded in the table.     
@@ -93,7 +130,7 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: upload the case information table
+      summary: 3.6 Upload the case information table
       description: >-
         upload the case information table.   
       responses:
@@ -109,7 +146,7 @@ paths:
               properties:
                 case_info_table:
                   type: string
-                  description: the case info table url
+                  description: the case info table partial path
 
   '/practitioners/cases-invitation':  
     get:
@@ -117,7 +154,7 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: Return all the cases the practitioner invited.
+      summary: 3.5 Return all the cases the practitioner invited.
       description: >-
         A practitioner can receive the invitation and check the case basic information. 
         This will return the cases the practitioner hasn't passed the invitation yet.
@@ -140,7 +177,7 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: The practitioner accept the invitation.
+      summary: 3.5 The practitioner accept the invitation.
       description: >-
         A practitioner accept the invitation
       responses:
@@ -162,36 +199,37 @@ paths:
         - cases
       security:
         - BearerAuth: []
-      summary: Invite other practitioners to join the case.
+      summary: 3.5 Invite other practitioners to join the case.
       description: >-
         When invite other practitioners, the manager also need to assign a role to every practitioner.  
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
       requestBody:
-        description: an array of the practitioner registration code
+        description: an array of the practitioner phone
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                registration_codes:
+                practitioner_phones:
                   type: array
                   items:
                     type: object
                     properties:
-                      registration_code:
+                      phone:
                         type: string
-                        example: todo
+                        example: "13822309990"
                       roll:
-                        description: the roll of the practitioner
+                        description: the roll of a practitioner
                         type: string
                         enum:
                           - manager
                           - visitor
                           - other
-  
+
+# ================= PAUSE HERE =========================
   '/cases/{case_id}/credetors/claim-information':
     parameters:
       - name: case_id
@@ -308,7 +346,7 @@ components:
         body:
           type: object
           properties:
-            download_field:
+            case_info_table:
               description: |
                 The download field of the case information table.
                 field can be nullable.
@@ -363,7 +401,7 @@ components:
         body:
           type: object
           properties:          
-            case_info:
+            cases_info:
               type: array
               nullable: true
               items:
@@ -403,7 +441,7 @@ components:
     Debtor:
       type: object
       properties:
-        company_name:
+        company:
           type: string
           example: alibaba
         credit_number:
@@ -426,7 +464,7 @@ components:
         establishment_day:
           type: string
           example: 2016/05/26
-        company_contact:
+        company_fixed_line:
           type: string
           example: "5385470"
         registration_authority:
@@ -463,7 +501,7 @@ components:
           type: string
           description: the company user works for
           example: alibaba
-        company_contact:
+        company_fixed_line:
           type: string
           description: the phone number of the company
           example: "5385470"
@@ -479,7 +517,7 @@ components:
         - $ref: '#/components/schemas/Applicant'
         - type: object
           properties:
-            company_name:
+            company:
               type: string
               example: alibaba
             credit_number:
@@ -494,7 +532,7 @@ components:
               type: string
               description: address is the address of the registered address of the company
               example: 800 Dongchuan Road, Minhang District, Shanghai, China
-            company_contact:
+            company_fixed_line:
               type: string
               example: "5385470"
             trustee:
@@ -506,7 +544,7 @@ components:
         - $ref: '#/components/schemas/Applicant'
         - type: object
           properties:
-            natural_person_name:
+            name:
               type: string
               example: Nakamura
             credentials_number:
@@ -559,27 +597,27 @@ components:
           type: string
           description: address of the court
           example: 1200 Hongqiao Road, Changning District, Shanghai, China
-        contact:
+        fixed_line:
           type: string
           description: court contact
           example: "021-34254567"
         presiding_judge:
-          $ref: '#/components/schemas/CompanyApplicant'
+          $ref: '#/components/schemas/CourtMembersInfo'
         collegial_panel_members:
           type: array
           minLength: 1
           items:
-            $ref: '#/components/schemas/CompanyApplicant'
+            $ref: '#/components/schemas/CourtMembersInfo'
         judge_assistants:
           type: array
           minLength: 1
           items:
-            $ref: '#/components/schemas/CompanyApplicant'
+            $ref: '#/components/schemas/CourtMembersInfo'
         clerks:
           type: array
           minLength: 1
           items:
-            $ref: '#/components/schemas/CompanyApplicant'
+            $ref: '#/components/schemas/CourtMembersInfo'
       
     CourtMembersInfo:
       description: basic information of a court member
@@ -601,7 +639,7 @@ components:
       description: basic information of the case
       type: object
       properties:
-        id:
+        case_real_id:
           type: string
           description: the real-world id of the case
           example: "(2011) the second court No. 92"
@@ -630,10 +668,10 @@ components:
           type: string
           description: the principal of the responsible body
           example: Batista
-        contact:
+        phone:
           type: string
           description: contact of the manager
-          example: "56798420"
+          example: "18098372901"
         address:
           type: string
           description: the contact address of the manager
@@ -665,7 +703,7 @@ components:
         - $ref: '#/components/schemas/ManagerMembers'
         - type: object
           properties:
-            agency_name:
+            name:
               type: string
               example: The legend Agency
 
@@ -687,11 +725,11 @@ components:
         - $ref: '#/components/schemas/ManagerMembers'
         - type: object
           properties:
-            natural_person_name:
+            name:
               type: string
               description: the name of the natural person
               example: Yong
-            natural_person_company:
+            company:
               type: string
               description: the company the natural person is in
               example: alibaba
@@ -702,14 +740,19 @@ components:
       discriminator:
         propertyName: composition_model
         mapping:
-          liquidation_team: '#/components/schemas/LiquidationTeamAsManager'
-          single_agency: '#/components/schemas/SingleAgencyAsManager'
-          mul_agencies: '#/components/schemas/MulAgenciesAsManager'
-          natural_person: '#/components/schemas/NaturalPersonAsManager'
+          liquidation-team: '#/components/schemas/LiquidationTeamAsManager'
+          single-agency: '#/components/schemas/SingleAgencyAsManager'
+          mul-agencies: '#/components/schemas/MulAgenciesAsManager'
+          natural-person: '#/components/schemas/NaturalPersonAsManager'
       properties:
         composition_model:
           description: type of the manager composition
           type: string
+          enum:
+            - liquidation-team
+            - single-agency
+            - mul-agencies
+            - natural-person
 
     CompanyClaimInfo:
       type: object
