@@ -506,12 +506,12 @@ components:
                 properties:
                   credentials_front:
                     type: string
-                    description: the image address of the face of credentials
-                    example: store.legend.law/GUQMDUAOQ8NKQQ
+                    description: the image partial path of the face of credentials
+                    example: GUQMDUAOQ8NKQQ
                   credentials_back:
                     type: string
-                    description: the image address of the rear of credentials
-                    example: store.legend.law/WOQKEHXUWIGFDMH
+                    description: the image partial path of the rear of credentials
+                    example: WOQKEHXUWIGFDMH
               personal_info:
                 $ref: '#/components/schemas/PractitionerPersonalInfo'
               contact:
