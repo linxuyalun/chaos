@@ -566,18 +566,39 @@ components:
           description: court contact
           example: "021-34254567"
         presiding_judge:
-          type: string
-          example: Lin
+          $ref: '#/components/schemas/CompanyApplicant'
         collegial_panel_members:
-          type: string
-          example: Siyuan, Yifan, Cece
-        judge_assistant:
-          type: string
-          example: Kane
-        clerk:
-          type: string
-          example: Rock
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/CompanyApplicant'
+        judge_assistants:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/CompanyApplicant'
+        clerks:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/CompanyApplicant'
       
+    CourtMembersInfo:
+      description: basic information of a court member
+      type: object
+      properties:
+        name:
+          type: string
+          example: Shinsuke Nakamura
+        phone:
+          type: string
+          nullable: true
+          example: "13920042013"
+        fixed_line:
+          type: string
+          nullable: true
+          example: "5385479"
+    
     CaseInfo:
       description: basic information of the case
       type: object

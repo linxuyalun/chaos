@@ -7,7 +7,7 @@ info:
   description: |
     # Introduction
     User management API Spec for the legend, naive now. 
-  version: "0.0.2"
+  version: "0.1.0"
   title: The Legend
   contact:
     name: User Management API Support
@@ -219,23 +219,19 @@ components:
           format: password
           example: drowssaP123
 
-    EnterpriseLegalCredetor:
-      description: The credetor type is enterprise legal
+    CompanyCredetor:
+      description: The credetor type is company
       allOf:
         - $ref: '#/components/schemas/CredetorAccountRegister'
         - type: object
           properties:
-            legal_name:
-              description: Enterprise legal name.
-              example: Mark Henry
-            legal_credentials:
-              description: credit number of the legal
+            name:
+              description: Company name.
+              example: alibaba
+            credit_number:
+              description: credit number of the company
               type: string
               example: "5335271"
-            legal_phone:
-              description: legal cantact number
-              type: string
-              example: "13425683749"
             password:
               type: string
               description: >-
@@ -246,9 +242,27 @@ components:
               maxLength: 64
               pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
               example: drowssaP123
-            todo:
-              type: string
-              example: 法人开户受托人、身份证号、用户协议
+            trustee:
+              description: a trustee is the person who comes to register the account.
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Shinsuke Nakamura
+                credentials_number:
+                  type: string
+                  example: "533527198909210238"
+                phone:
+                  type: string
+                  example: "13422522543"
+            user_agreement:
+              type: integer
+              description: |
+                If a credetor wants to register, agree the user agreement is needed.
+                '0' means disagree while '1' means agree.
+              enum:
+                - 1
+                - 0
             
     NaturalPersonCredetor:
       description: The credetor type is natural person
@@ -277,16 +291,21 @@ components:
               maxLength: 64
               pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
               example: drowssaP123
-            todo:
-              type: string
-              example: 用户协议                    
+            user_agreement:
+              type: integer
+              description: |
+                If a credetor wants to register, agree the user agreement is needed.
+                '0' means disagree while '1' means agree.
+              enum:
+                - 1
+                - 0
     
     CredetorAccountRegister:
       type: object
       discriminator:
         propertyName: credetor_type
         mapping:
-          enterprise-legal: '#/components/schemas/EnterpriseLegalCredetor'
+          enterprise: '#/components/schemas/CompanyCredetor'
           natural-person: '#/components/schemas/NaturalPersonCredetor'
       properties:
         claim_declaration_agreement:
@@ -305,7 +324,7 @@ components:
         credetor_type:
           type: string
           enum:
-            - enterprise-legal
+            - company
             - natural-person           
 
     Login:
