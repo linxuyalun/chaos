@@ -265,7 +265,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ClaimEvidenceListResponse'    
-  
+
+  '/cases/{case_id}/practitioners/manager/':
   
 components:
   schemas:
