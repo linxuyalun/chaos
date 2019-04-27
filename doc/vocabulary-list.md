@@ -1,6 +1,8 @@
-# Vocabulary List
+Vocabulary List
 
 In our API, there are many rolls in it. However, different roles may have some same properties. So this doc is used to ensure the consistency of the words in API, and try to not make developers fall into chaos.
+
+## User
 
 | EN                          | Type    | CH                           | EN                   | Type    | CH                       |
 | --------------------------- | ------- | ---------------------------- | -------------------- | ------- | ------------------------ |
@@ -19,8 +21,17 @@ In our API, there are many rolls in it. However, different roles may have some s
 | claim_declaration_agreement | Integer | 债权申报协议                 | case_id              | uuid    | 案件的唯一id             |
 | credetor_type               | String  | 债权人类型                   | credit_number        | String  | 法人信用号               |
 | company_trustee             | Object  | 法人开户受托人               | user_agreement       | Integer | 用户协议                 |
-|                             |         |                              |                      |         |                          |
-|                             |         |                              |                      |         |                          |
-|                             |         |                              |                      |         |                          |
-|                             |         |                              |                      |         |                          |
-|                             |         |                              |                      |         |                          |
+| credentials_front           | String  | 证件照正面                   | credentials_back     | String  | 证件照背面               |
+
+## Cases
+
+| EN           | Type   | CH         | EN              | Type   | CH         |
+| ------------ | ------ | ---------- | --------------- | ------ | ---------- |
+| case_type    | String | 案件类型   | contact         | Object | 联系人     |
+| fixed_line   | String | 固定电话   | debtor          | Object | 债务人     |
+| applicant    | Object | 申请人     | court           | Object | 法院       |
+| manager_info | Object | 管理人信息 | manager_members | Object | 管理人成员 |
+| toll         | Object | 收费方式   |                 |        |            |
+|              |        |            |                 |        |            |
+|              |        |            |                 |        |            |
+
