@@ -2,15 +2,15 @@
 
 In our API, there are many rolls in it. However, different roles may have some same properties. So this doc is used to ensure the consistency of the words in API, and try to not make developers fall into chaos.
 
-               | Object  | 个人信息                     | contact_info         | Object  | 联系方式                 |
-| name                        | String  | 姓名，名称                   | address              | String  | 地址                     |
-| occupational_info           | Object  | 职业信息                     | company              | String  | 企业名称                 |
-| company_fixed_line          | String  | 企业联系电话                 | identity             | String  | 行业身份（法| EN                          | Type    | CH                           | EN                   | Type    | CH                       |
+| EN                          | Type    | CH                           | EN                   | Type    | CH                       |
 | --------------------------- | ------- | ---------------------------- | -------------------- | ------- | ------------------------ |
 | phone                       | String  | 手机号                       | password             | String  | 密码                     |
 | credentials_type            | String  | 证件类型                     | id-card              | String  | 中国身份证               |
 | credentials_number          | String  | 个人证件号，通常是身份证号码 | email                | String  | 邮箱                     |
-| personal_info官，会计等） |
+| personal_info               | Object  | 个人信息                     | contact_info         | Object  | 联系方式                 |
+| name                        | String  | 姓名，名称                   | address              | String  | 地址                     |
+| occupational_info           | Object  | 职业信息                     | company              | String  | 企业名称                 |
+| company_fixed_line          | String  | 企业联系电话                 | identity             | String  | 行业身份（法官，会计等） |
 | position                    | String  | 企业职称                     | bank_account         | Object  | 银行账户                 |
 | cases                       | Array   | 案件（复数）                 | role                 | String  | 角色                     |
 | case_info                   | Object  | 案件信息                     | case_real_id         | String  | 受理案号                 |
