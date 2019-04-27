@@ -7,6 +7,17 @@ info:
   description: |
     # Introduction
     User management API Spec for the legend, naive now. 
+    # Vocabulary List
+
+    Vocabulary list is used to avoid ambiguity of the words in API, and try to make developers not to fall into chaos.
+
+    ## practitioners
+
+    | EN                 | CH                               | EN       | CH                       |
+    | ------------------ | -------------------------------- | -------- | ------------------------ |
+    | phone              | 从业人员用户注册手机号           | password | 从业人员用户密码         |
+    | credentials_type   | 从业人员证件类型                 | id-card  | 从业人员证件为中国身份证 |
+    | credentials_number | 从业人员证件号，通常是身份证号码 | email    | 从业人员邮箱             |
   version: "0.1.0"
   title: The Legend
   contact:
@@ -396,7 +407,7 @@ components:
           type: string
           description: user contact address
           example: Shanghai Jiaotong University
-        mail:
+        email:
           type: string
           format: email
           description: the email address to contact

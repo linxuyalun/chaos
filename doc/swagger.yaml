@@ -31,7 +31,7 @@ paths:
     post:
       tags:
         - cases
-      summary: launch a new case
+      summary: 3.1 Launch a new case
       description: >-
         Practitioners can launch a new case. 
         When a new case is createrd, the remaining workflow is case-driven.
@@ -265,8 +265,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ClaimEvidenceListResponse'    
-
-  '/cases/{case_id}/practitioners/manager/':
   
 components:
   schemas:
@@ -763,13 +761,6 @@ components:
         address:
           type: string
           example: 800 Dongchuan Road, Minhang District, Shanghai, China
-        phone:
-          type: string
-          description: |
-            it's strange here. 
-            When creditor registers, he/she needs to fill in phone
-            Needs to be confirmed.
-          example: Needs to be confirmed.
         email:
           type: string
           example: alibaba@alimama.com
@@ -806,10 +797,13 @@ components:
                   trustees:
                     type: array
                     nullable: true
-                    description: Needs to be confirmed.
+                    description: Trustees can be null or many.
                     items:
-                      type: string
-                      example: todo
+                      $ref: '#/components/schemas/Trustee'
+                  contact:
+                    type: string
+                    description: >- 
+                      By default the contact number is the first trustee phone of the trustees.                     
                   bank_account:
                     type: object
                     description: bank account information of a credetor
@@ -917,7 +911,7 @@ components:
                   - E
               contact:
                 type: object
-                description: the public contact of the case
+                description: the public contact of the case, usually is the manager of the case
                 properties:
                   name:
                     type: string
@@ -930,6 +924,9 @@ components:
                     type: string
                     example: "021-54678924"
                     nullable: true
+                  address:
+                    type: string
+                    description: important information, the express delivery address of 5.6
               debtor:
                 $ref: '#/components/schemas/Debtor'
               applicant:
