@@ -33,7 +33,7 @@ info:
     | claim_declaration_agreement | Integer | 债权申报协议                 | case_id              | uuid    | 案件的唯一id             |
     | credetor_type               | String  | 债权人类型                   | credit_number        | String  | 法人信用号               |
     | company_trustee             | Object  | 法人开户受托人               | user_agreement       | Integer | 用户协议                 | 
-    | credentials_front           | String  | 证件照正面                   | credentials_back     | String  | 证件照背面               |
+    | credentials_front           | String  | *&证件照正面*                   | credentials_back     | String  | *&证件照背面*               |
 
   version: "0.1.0"
   title: The Legend
