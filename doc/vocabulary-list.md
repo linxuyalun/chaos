@@ -64,8 +64,8 @@ Note that some fields **have the same name with different type**.
 | laywer_fee             | String | 律师费               | execution_fee              | String | 执行费             |
 | contract_situation     | Object | 合同情况             | creditors_claims           | Array  | 债权人及其证明材料 |
 | type                   | String | 类型                 | company_trustee            | Object | 法人开户受托人     |
-| claims                 | Array  | 债权（复数）         |                            |        |                    |
-|                        |        |                      |                            |        |                    |
+| claims                 | Array  | 债权（复数）         | practitioner_id            | String | 从业人员id         |
+| practitioner_ids       | Array  | 从业人员id（复数）   |                            |        |                    |
 |                        |        |                      |                            |        |                    |
 |                        |        |                      |                            |        |                    |
 |                        |        |                      |                            |        |                    |

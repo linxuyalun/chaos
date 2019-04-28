@@ -51,6 +51,8 @@ info:
     | laywer_fee             | String | 律师费               | execution_fee              | String | 执行费             |
     | contract_situation     | Object | 合同情况             | creditors_claims           | Array  | 债权人及其证明材料 |
     | type                   | String | 类型                 | company_trustee            | Object | 法人开户受托人     |
+    | claims                 | Array  | 债权（复数）         | practitioner_id            | String | 从业人员id         |
+    | practitioner_ids       | Array  | 从业人员id（复数）   |                            |        |                    |
 
 
   version: "0.1.1"
@@ -287,6 +289,42 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/CreditorClaim'
 
+  '/claims/{claim_id}/practitioners/rearrange':
+    parameters:
+    - name: claim_id
+      in: path
+      description: uuid of the claim
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000   
+    post:
+      tags:
+        - cases
+      summary: 6.2 Rearrange a practitioner to review the claim
+      description: |
+        By default, the practitioner to review the claim will be arranged automatically.
+        But it can be also be arranged manually.
+        Need to be confirmed of the auth.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ClaimListResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                practitioner_id:
+                  description: the practitioner be rearranged to review the claim
+                  type: string
+                  format: uuid
+                  example: 550e8400-e29b-41d4-a716-446655440000   
+
   '/cases/{case_id}/practitioners/get-claims':
     parameters:
       - name: case_id
@@ -310,7 +348,45 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ClaimListResponse'    
-  
+
+  '/claims/{claim_id}/practitioners/assign':
+    parameters:
+    - name: claim_id
+      in: path
+      description: uuid of the claim
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000   
+    post:
+      tags:
+        - cases
+      summary: 6.4 Assign a practitioner to review the claim
+      description: |
+        The difference between 'rearange' and 'assign' is ---
+        the practitioner who 'rearrange' the claim doesn't need to review invited;
+        the practitioner who 'assgin' the claim still need to review the claim after the practitioner 'assign'ed reviewing.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ClaimListResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                practitioner_ids:
+                  type: array
+                  items:
+                    type: string
+                    description: the practitioner be rearranged to review the claim
+                    format: uuid
+                    example: 550e8400-e29b-41d4-a716-446655440000  
+
 components:
   schemas:
     Error:
