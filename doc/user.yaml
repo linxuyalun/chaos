@@ -31,7 +31,7 @@ info:
     | acceptance_time             | String  | 受理时间                     | legal_representative | String  | 企业法定代表人           |
     | first_meeting_point         | String  | 一次会时点                   | second_meeting_point | String  | 二次会时点               |
     | claim_declaration_agreement | Integer | 债权申报协议                 | case_id              | uuid    | 案件的唯一id             |
-    | credetor_type               | String  | 债权人类型                   | credit_number        | String  | 法人信用号               |
+    | creditor_type               | String  | 债权人类型                   | credit_number        | String  | 法人信用号               |
     | company_trustee             | Object  | 法人开户受托人               | user_agreement       | Integer | 用户协议                 | 
     | credentials_front           | String  | *&证件照正面*                   | credentials_back     | String  | *&证件照背面*               |
 
@@ -161,7 +161,7 @@ paths:
     post:
       tags:
         - creditors
-      summary: 5.1 Credetor login.
+      summary: 5.1 Creditor login.
       description: >-
         Creditor login. Case id, credentials number and password are needed.
       responses:
@@ -173,13 +173,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CredetorAccount'
+              $ref: '#/components/schemas/CreditorAccount'
   
   '/creditors/registeration':
     post:
       tags:
         - creditors
-      summary: 5.1 Credetor register.
+      summary: 5.1 Creditor register.
       description: >-
         Creditor register.
       responses:
@@ -191,7 +191,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CredetorAccountRegister'
+              $ref: '#/components/schemas/CreditorAccountRegister'
 
   '/creditors/logout':
     get:
@@ -229,7 +229,7 @@ components:
           pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])'
           example: drowssaP123
     
-    CredetorAccount:
+    CreditorAccount:
       type: object
       properties:
         case_id:
@@ -243,14 +243,14 @@ components:
           example: "533527198909210238"
         password:
           type: string
-          description: Credetor password.
+          description: Creditor password.
           format: password
           example: drowssaP123
 
-    CompanyCredetor:
-      description: The credetor type is company
+    CompanyCreditor:
+      description: The creditor type is company
       allOf:
-        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - $ref: '#/components/schemas/CreditorAccountRegister'
         - type: object
           properties:
             name:
@@ -286,16 +286,16 @@ components:
             user_agreement:
               type: integer
               description: |
-                If a credetor wants to register, agree the user agreement is needed.
+                If a creditor wants to register, agree the user agreement is needed.
                 '0' means disagree while '1' means agree.
               enum:
                 - 1
                 - 0
             
-    NaturalPersonCredetor:
-      description: The credetor type is natural person
+    NaturalPersonCreditor:
+      description: The creditor type is natural person
       allOf:
-        - $ref: '#/components/schemas/CredetorAccountRegister'
+        - $ref: '#/components/schemas/CreditorAccountRegister'
         - type: object
           properties:
             name:
@@ -322,23 +322,23 @@ components:
             user_agreement:
               type: integer
               description: |
-                If a credetor wants to register, agree the user agreement is needed.
+                If a creditor wants to register, agree the user agreement is needed.
                 '0' means disagree while '1' means agree.
               enum:
                 - 1
                 - 0
     
-    CredetorAccountRegister:
+    CreditorAccountRegister:
       type: object
       discriminator:
-        propertyName: credetor_type
+        propertyName: creditor_type
         mapping:
-          enterprise: '#/components/schemas/CompanyCredetor'
-          natural-person: '#/components/schemas/NaturalPersonCredetor'
+          enterprise: '#/components/schemas/CompanyCreditor'
+          natural-person: '#/components/schemas/NaturalPersonCreditor'
       properties:
         claim_declaration_agreement:
           description: >-
-            If a Credetor wants to register, he/she must agree the claim declaration agreement
+            If a Creditor wants to register, he/she must agree the claim declaration agreement
             0 represents unagree, 1 represents agree
           type: integer
           enum:
@@ -349,7 +349,7 @@ components:
           type: string
           format: uuid
           example: 550e8400-e29b-41d4-a716-446655440000
-        credetor_type:
+        creditor_type:
           type: string
           enum:
             - company
