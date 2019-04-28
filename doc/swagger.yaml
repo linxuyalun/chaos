@@ -959,7 +959,61 @@ components:
                         example: "13425683749"
                   - $ref: '#/components/schemas/NaturalPersonClaimInfo'
               - $ref:  '#/components/schemas/CreditorBasicInfo'
-              
+          claims:
+            type: array
+            items:
+              $ref: 
+
+    CreditorClaim:
+      type: object
+      properties:
+        claim_property:
+          type: string
+          enum:
+            - normal-claim
+            - property-secured-claim
+            - tax-claim
+            - employee-claim
+            - others
+        claim_amount:
+          type: object
+          description: the currency of the claim is RMB
+          properties:
+            capital:
+              type: string
+              example: 10,000,000
+            interest:
+              type: string
+              example: "0.005"
+            liquidated_damages:
+              type: string
+              example: "8792"
+            litigation_costs:
+              type: string
+              example: "100"
+            laywer_fee:
+              type: string
+              example: "100.99"
+            execution_fee:
+              type: string
+              example: "200"
+            others:
+              type: string
+              example: "100"
+        contract_situation:
+          type: object
+          properties:
+            todo:
+              example: todo
+        todo:
+          example: 财产担保情况, 有无诉讼或仲裁, 有无查封冻结
+        files:
+          description: the corresponding file of the above
+          type: object
+          properties:
+            todo:
+              example: todo, 具体要上传的文件待确定     
+
 
   requestBodies:    
     CreditorInfo:
@@ -981,54 +1035,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              claim_property:
-                type: string
-                enum:
-                  - normal-claim
-                  - property-secured-claim
-                  - tax-claim
-                  - employee-claim
-                  - others
-              claim_amount:
-                type: object
-                description: the currency of the claim is RMB
-                properties:
-                  capital:
-                    type: string
-                    example: 10,000,000
-                  interest:
-                    type: string
-                    example: "0.005"
-                  liquidated_damages:
-                    type: string
-                    example: "8792"
-                  litigation_costs:
-                    type: string
-                    example: "100"
-                  laywer_fee:
-                    type: string
-                    example: "100.99"
-                  execution_fee:
-                    type: string
-                    example: "200"
-                  others:
-                    type: string
-                    example: "100"
-              contract_situation:
-                type: object
-                properties:
-                  todo:
-                    example: todo
-              todo:
-                example: 财产担保情况, 有无诉讼或仲裁, 有无查封冻结
-              files:
-                description: the corresponding file of the above
-                type: object
-                properties:
-                  todo:
-                    example: todo, 具体要上传的文件待确定
+            $ref: '#/components/schemas/CreditorClaim'
 
     CaseInfo:
       description: information of initiate a case
