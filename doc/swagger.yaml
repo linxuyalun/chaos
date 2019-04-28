@@ -16,35 +16,44 @@ info:
 
     *&XXX means the file path of XXX*
 
-    | EN                     | Type   | CH                   | EN                         | Type   | CH             |
-    | ---------------------- | ------ | -------------------- | -------------------------- | ------ | -------------- |
-    | case_type              | String | 案件类型             | contact                    | Object | 联系人         |
-    | name                   | String | 姓名，名称           | phone                      | String | 电话           |
-    | fixed_line             | String | 固定电话             | address                    | String | 地址           |
-    | debtor                 | Object | 债务人               | company                    | String | 企业名称       |
-    | credit_number          | String | 企业信用号           | business_scope             | String | 经营范围       |
-    | registered_capital     | String | 注册资本             | subscribed_capital         | String | 实缴资本       |
-    | establishment_day      | String | 成立日期             | company_fixed_line         | String | 企业联系电话   |
-    | registration_authority | String | 登记机关             | legal_representative       | Object | 企业法定代表人 |
-    | applicant              | Object | 申请人               | application_type           | String | 申请人类型     |
-    | trustee                | Object | 受托人               | credentials_number         | String | 个人证件号     |
-    | trustees               | Array  | 受托人（复数）       | court                      | Object | 法院           |
-    | presiding_judge        | Object | 主审法官             | collegial_panel_members    | Array  | 合议庭成员     |
-    | judge_assistants       | Array  | 法官助理             | clerks                     | Array  | 书记员         |
-    | case_info              | Object | 案件信息             | case_real_id               | String | 受理案号       |
-    | acceptance_time        | String | 受理时间             | legal_representative       | String | 企业法定代表人 |
-    | first_meeting_point    | String | 一次会时点           | second_meeting_point       | String | 二次会时点     |
-    | manager_info           | Object | 管理人信息           | responsible_body_full_name | String | 责任主体全称   |
-    | principal              | String | 管理人负责人         | manager_members            | Object | 管理人成员     |
-    | composition_model      | String | 管理人构成模式       | liquidation_team_members   | Array  | 清算组成员     |
-    | agencies_name          | Array  | 多中介机构名称       | liquidation-team           | Value  | 清算组         |
-    | single-agency          | Value  | 单一中介机构         | mul-agencies               | Value  | 多个中介机构   |
-    | natural-person         | Value  | 自然人               | toll                       | Object | 收费           |
-    | case_id                | uuid   | 案件的唯一id         | case_info_table            | String | *&案件信息表*  |
-    | cases_info             | Array  | 案件基本信息（复数） |                            |        |                |
+    | EN                     | Type   | CH                   | EN                         | Type   | CH                 |
+    | ---------------------- | ------ | -------------------- | -------------------------- | ------ | ------------------ |
+    | case_type              | String | 案件类型             | contact                    | Object | 联系人             |
+    | name                   | String | 姓名，名称           | phone                      | String | 电话               |
+    | fixed_line             | String | 固定电话             | address                    | String | 地址               |
+    | debtor                 | Object | 债务人               | company                    | String | 企业名称           |
+    | credit_number          | String | 企业信用号           | business_scope             | String | 经营范围           |
+    | registered_capital     | String | 注册资本             | subscribed_capital         | String | 实缴资本           |
+    | establishment_day      | String | 成立日期             | company_fixed_line         | String | 企业联系电话       |
+    | registration_authority | String | 登记机关             | legal_representative       | Object | 企业法定代表人     |
+    | applicant              | Object | 申请人               | application_type           | String | 申请人类型         |
+    | trustee                | Object | 受托人               | credentials_number         | String | 个人证件号         |
+    | trustees               | Array  | 受托人（复数）       | court                      | Object | 法院               |
+    | presiding_judge        | Object | 主审法官             | collegial_panel_members    | Array  | 合议庭成员         |
+    | judge_assistants       | Array  | 法官助理             | clerks                     | Array  | 书记员             |
+    | case_info              | Object | 案件信息             | case_real_id               | String | 受理案号           |
+    | acceptance_time        | String | 受理时间             | legal_representative       | String | 企业法定代表人     |
+    | first_meeting_point    | String | 一次会时点           | second_meeting_point       | String | 二次会时点         |
+    | manager_info           | Object | 管理人信息           | responsible_body_full_name | String | 责任主体全称       |
+    | principal              | String | 管理人负责人         | manager_members            | Object | 管理人成员         |
+    | composition_model      | String | 管理人构成模式       | liquidation_team_members   | Array  | 清算组成员         |
+    | agencies_name          | Array  | 多中介机构名称       | liquidation-team           | Value  | 清算组             |
+    | single-agency          | Value  | 单一中介机构         | mul-agencies               | Value  | 多个中介机构       |
+    | natural-person         | Value  | 自然人               | toll                       | Object | 收费               |
+    | case_id                | uuid   | 案件的唯一id         | case_info_table            | String | *&案件信息表*      |
+    | cases_info             | Array  | 案件基本信息（复数） | bank_account               | Object | 银行账户           |
+    | beneficiary            | String | 账户名称             | bank                       | String | 开户行，银行名称   |
+    | bank_code              | String | 开户行行号           | account_number             | String | 账户号             |
+    | company                | Object | 企业                 | fax                        | String | 传真               |
+    | claim_property         | String | 债权性质             | claim_amount               | Object | 债权金额           |
+    | capital                | String | 本金                 | interest                   | String | 利息               |
+    | liquidated_damages     | String | 违约金               | litigation_costs           | String | 诉讼金             |
+    | laywer_fee             | String | 律师费               | execution_fee              | String | 执行费             |
+    | contract_situation     | Object | 合同情况             | creditors_claims           | Array  | 债权人及其证明材料 |
+    | type                   | String | 类型                 | company_trustee            | Object | 法人开户受托人     |
 
 
-  version: "0.1.0"
+  version: "0.1.1"
   title: The Legend
   contact:
     name: API Support
@@ -229,8 +238,7 @@ paths:
                           - visitor
                           - other
 
-# ================= PAUSE HERE =========================
-  '/cases/{case_id}/credetors/claim-information':
+  '/cases/{case_id}/creditors/information':
     parameters:
       - name: case_id
         in: path
@@ -243,17 +251,17 @@ paths:
     post:
       tags:
         - cases
-      summary: 5.2 Creditor adds claim information
-      description: Add claim information of a creditor
+      summary: 5.2 Creditor adds information
+      description: Add information of a creditor
       security:
         - BearerAuth: []
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
       requestBody:
-        $ref: '#/components/requestBodies/CredetorClaimInfo'
+        $ref: '#/components/requestBodies/CreditorInfo'
                     
-  '/cases/{case_id}/credetors/claim-evidence':
+  '/cases/{case_id}/creditors/claim':
     parameters:
       - name: case_id
         in: path
@@ -266,20 +274,20 @@ paths:
     post:
       tags:
         - cases
-      summary: 5.3 Creditor adds claim evidence.
+      summary: 5.3 Creditor adds a claim.
       description: |
-        Add claim evidence of a creditor
+        Add a claim of a creditor
         There may be several documents, and each document's format is the same.
-        Back end needs to generate an id for every claim evidence doc.
+        Back end needs to generate an id for every claim.
       security:
         - BearerAuth: []
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
       requestBody:
-        $ref: '#/components/requestBodies/CredetorClaimEvidence'
-  
-  '/cases/{case_id}/practitioners/manager/get-claim-evidences':
+        $ref: '#/components/requestBodies/CreditorClaim'
+
+  '/cases/{case_id}/practitioners/get-claims':
     parameters:
       - name: case_id
         in: path
@@ -292,17 +300,16 @@ paths:
     get:
       tags:
         - cases
-      summary: 6.3 Return claim evidences of the case
+      summary: 6.3 Return claims of the case
       description: |
-        A manager needs to check credetors' claim evidences.
-        To do so, back end should first check the corresponding credetors of a spec manager.
-        Then return all claim evidences of the credetor.
-        Note that every manager has different credetors.
+        Manager and some roles of company need to check creditors' claims.
+        To do so, back end should first check the corresponding creditors of a spec roles.
+        Then return all unchecked(may alse cheked, to be confirmed) claims of the creditor.
       security:
         - BearerAuth: []
       responses:
         '200':
-          $ref: '#/components/responses/ClaimEvidenceListResponse'    
+          $ref: '#/components/responses/ClaimListResponse'    
   
 components:
   schemas:
@@ -414,7 +421,7 @@ components:
                         example: 550e8400-e29b-41d4-a716-446655440000
                   - $ref: '#/components/schemas/CaseInfo'
      
-    200ClaimEvidenceListResponse:
+    200ClaimListResponse:
       type: object
       properties:
         status_code:
@@ -428,14 +435,8 @@ components:
         body:
           type: object
           properties:
-            redectors:
-              type: array
-              nullable: true
-              items:
-                type: object
-                properties:
-                  todo:
-                    example: todo
+            creditors_claims:
+              $ref: '#/components/schemas/CreditorsWithClaims'
                   
     
     Debtor:
@@ -770,7 +771,7 @@ components:
             email:
               type: string
               example: alibaba@alimama.com
-            fax_number:
+            fax:
               type: string
               example: "0592-88887777"
         legal_representative:
@@ -808,79 +809,174 @@ components:
           type: string
           example: alibaba@alimama.com
 
+    CreditorInfo:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CreditorBasicInfo'
+        - oneOf:
+          - $ref: '#/components/schemas/CompanyClaimInfo'
+          - $ref: '#/components/schemas/NaturalPersonClaimInfo'
 
-         
+    CreditorBasicInfo:
+      type: object
+      properties:
+        creditor_specific_type:
+          description: specific type of a creditor, multiple choice.
+          type: array
+          minLength: 1
+          items:
+            type: string
+            enum: 
+              - financing
+              - operating
+              - public-utility
+              - intermediary-service
+              - others
+              - todo
+        trustees:
+          type: array
+          nullable: true
+          description: Trustees can be null or many.
+          items:
+            $ref: '#/components/schemas/Trustee'
+        phone:
+          type: string
+          description: >- 
+            By default the contact number is the first trustee phone of the trustees.
+            It can be changed if the debtor wants to                  
+        bank_account:
+          type: object
+          description: bank account information of a creditor
+          properties:
+            beneficiary:
+              type: string
+              description: |
+                Beneficiary is the bank account name.
+                By default the beneficiary is the same as company name or natural person name.
+                If the creditor is natural person, beneficiary must be the same as natural person name.
+                If the creditor is company, beneficiary can be different.
+                Back end needs to specially mark this situation.
+            bank:
+              type: string
+              example: Bank of China, Chengjiang Office
+            bank_code:
+              type: string
+              example: "305100001016"
+            account_number:
+              type: string
+              example: "33265805054885"
+            files:
+              type: object
+              properties:
+                todo:
+                  example: todo      
+
+    CreditorsWithClaims:
+      description: return a list of creditors, which have multiple claims need to be checked.
+      type: array
+      items:
+        type: object
+        properties:
+          creditor:
+            type: object
+            allOf:
+              - oneOf:
+                - type: object
+                  properties:
+                    company:
+                      description: information of the company
+                      type: object
+                      properties:
+                        name:
+                          description: Company name.
+                          example: alibaba
+                        credit_number:
+                          description: credit number of the company
+                          type: string
+                          example: "5335271"
+                        type:
+                          type: string
+                          example: clothes
+                        address:
+                          type: string
+                          example: 800 Dongchuan Road, Minhang District, Shanghai, China
+                        email:
+                          type: string
+                          example: alibaba@alimama.com
+                        fax:
+                          type: string
+                          example: "0592-88887777"
+                    company_trustee:
+                      description: a trustee is the person who comes to register the account.
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Shinsuke Nakamura
+                        credentials_number:
+                          type: string
+                          example: "533527198909210238"
+                        phone:
+                          type: string
+                          example: "13422522543"
+                    legal_representative:
+                      description: information of the legal
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Randy Orton
+                        position:
+                          type: string
+                          example: CFO
+                        credentials_number:
+                          type: string
+                          description: credentials' number
+                          example: "533527198909210238"
+                        phone:
+                          type: string
+                          example: "13325473479"
+                        fixed_line:
+                          type: string
+                          example: "021-54678924"
+                          nullable: true
+                        address:
+                          type: string
+                          example: 800 Dongchuan Road, Minhang District, Shanghai, China 
+                - allOf:
+                  - type: object
+                    properties:
+                      name:
+                        description: Narural person name.
+                        example: Mark Henry
+                      credentials_number:
+                        description: id card number of the natural person
+                        type: string
+                        example: "533527198909210238"
+                      phone:
+                        description: natural person phone number
+                        type: string
+                        example: "13425683749"
+                  - $ref: '#/components/schemas/NaturalPersonClaimInfo'
+              - $ref:  '#/components/schemas/CreditorBasicInfo'
+              
+
   requestBodies:    
-    CredetorClaimInfo:
+    CreditorInfo:
       description: >-
-        Claim information of a credetor. 
-        A case may have many credetors.
-        Every credetor in a case has claim information.
+        Information of a creditor. 
+        A case may have many creditors.
+        Every creditor in a case needs to fill in information.
       required: true
       content:
         application/json:
           schema:
-            type: object
-            allOf:
-              - type: object
-                properties:
-                  credetor_specific_type:
-                    description: specific type of a credetor, multiple choice.
-                    type: array
-                    minLength: 1
-                    items:
-                      type: string
-                      enum: 
-                        - financing
-                        - operating
-                        - public-utility
-                        - intermediary-service
-                        - others
-                        - todo
-                  trustees:
-                    type: array
-                    nullable: true
-                    description: Trustees can be null or many.
-                    items:
-                      $ref: '#/components/schemas/Trustee'
-                  contact:
-                    type: string
-                    description: >- 
-                      By default the contact number is the first trustee phone of the trustees.                     
-                  bank_account:
-                    type: object
-                    description: bank account information of a credetor
-                    properties:
-                      beneficiary:
-                        type: string
-                        description: |
-                          Beneficiary is the bank account name.
-                          By default the beneficiary is the same as company name or natural person name.
-                          If the credetor is natural person, beneficiary must be the same as natural person name.
-                          If the credetor is company, beneficiary can be different.
-                          Back end needs to specially mark this situation.
-                      bank:
-                        type: string
-                        example: Bank of China, Chengjiang Office
-                      bank_code:
-                        type: string
-                        example: "305100001016"
-                      account_number:
-                        type: string
-                        example: "33265805054885"
-                      files:
-                        type: object
-                        properties:
-                          todo:
-                            example: todo
-              - oneOf:
-                - $ref: '#/components/schemas/CompanyClaimInfo'
-                - $ref: '#/components/schemas/NaturalPersonClaimInfo'
+            $ref: '#/components/schemas/CreditorInfo'
 
-    CredetorClaimEvidence:
+    CreditorClaim:
       description: >-
-        The credetor fills in the claim evidence document.
-        There may be several documents, and each document's format is the same.
+        The creditor fills in the claim.
+        There may be several claims, and each claim's format is the same.
       required: true
       content:
         application/json:
@@ -897,11 +993,9 @@ components:
                   - others
               claim_amount:
                 type: object
+                description: the currency of the claim is RMB
                 properties:
-                  currency:
-                    type: string
-                    default: rmb
-                  principal:
+                  capital:
                     type: string
                     example: 10,000,000
                   interest:
@@ -1042,13 +1136,13 @@ components:
               - $ref: '#/components/schemas/200RecieveInvitationResponse'
               - $ref: '#/components/schemas/Error'
 
-    ClaimEvidenceListResponse:
-      description: return the credetors' list response.
+    ClaimListResponse:
+      description: return the claims list response.
       content:
         application/json:
           schema:
             oneOf:
-              - $ref: '#/components/schemas/200ClaimEvidenceListResponse'
+              - $ref: '#/components/schemas/200ClaimListResponse'
               - $ref: '#/components/schemas/Error'
 
   securitySchemes:
