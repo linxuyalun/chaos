@@ -470,13 +470,13 @@ components:
         acceptance_time:
           type: string
           description: Acceptance Time Of The Court (Arbitral Authority)
-          example: 2018/08/24
+          example: 2018-08-24
         first_meeting_point:
           type: string
-          example: 2019/01/01
+          example: 2019-01-01
         second_meeting_point:
           type: string
-          example: 2019/02/02
+          example: 2019-02-02
         todo:
           type: string
           example: todo

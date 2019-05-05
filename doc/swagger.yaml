@@ -540,7 +540,7 @@ components:
           example: 3 millions
         establishment_day:
           type: string
-          example: 2016/05/26
+          example: 2016-05-26
         company_fixed_line:
           type: string
           example: "5385470"
@@ -723,13 +723,13 @@ components:
         acceptance_time:
           type: string
           description: Acceptance Time Of The Court (Arbitral Authority)
-          example: 2018/08/24
+          example: 2018-08-24
         first_meeting_point:
           type: string
-          example: 2019/01/01
+          example: 2019-01-01
         second_meeting_point:
           type: string
-          example: 2019/02/02
+          example: 2019-02-02
         todo:
           type: string
           example: todo
