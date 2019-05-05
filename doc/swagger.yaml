@@ -6,7 +6,7 @@ servers:
 info:
   description: |
     # Introduction
-    Cases API Spec for the legend, naive now. 
+    Cases API Spec for the legend, naive now.
 
     # Vocabulary List
 
@@ -74,14 +74,14 @@ tags:
       A bankruptcy case is created by a practitioner, and every case is unique.
       All information can be seen in the case.
 
-paths:         
+paths:
   '/cases':
     post:
       tags:
         - cases
       summary: 3.1 Launch a new case
       description: >-
-        Practitioners can launch a new case. 
+        Practitioners can launch a new case.
         When a new case is createrd, the remaining workflow is case-driven.
       security:
         - BearerAuth: []
@@ -90,7 +90,7 @@ paths:
           $ref: '#/components/responses/CreateCaseResponse'
       requestBody:
         $ref: '#/components/requestBodies/CaseInfo'
-  
+
   '/cases/{case_id}':
     get:
       tags:
@@ -123,7 +123,7 @@ paths:
         schema:
           type: string
           format: uuid
-          example: 550e8400-e29b-41d4-a716-446655440000 
+          example: 550e8400-e29b-41d4-a716-446655440000
     get:
       tags:
         - cases
@@ -132,10 +132,10 @@ paths:
       summary: 3.4 Get the case information table
       description: >-
         It will return the download url of the case information table.
-        Many information of the case will be recoded in the table.     
+        Many information of the case will be recoded in the table.
       responses:
         '200':
-          $ref: '#/components/responses/InfoTableResponse'  
+          $ref: '#/components/responses/InfoTableResponse'
     post:
       tags:
         - cases
@@ -143,7 +143,7 @@ paths:
         - BearerAuth: []
       summary: 3.6 Upload the case information table
       description: >-
-        upload the case information table.   
+        upload the case information table.
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
@@ -159,7 +159,7 @@ paths:
                   type: string
                   description: the case info table partial path
 
-  '/practitioners/cases-invitation':  
+  '/practitioners/cases-invitation':
     get:
       tags:
         - cases
@@ -167,7 +167,7 @@ paths:
         - BearerAuth: []
       summary: 3.5 Return all the cases the practitioner invited.
       description: >-
-        A practitioner can receive the invitation and check the case basic information. 
+        A practitioner can receive the invitation and check the case basic information.
         This will return the cases the practitioner hasn't passed the invitation yet.
       responses:
         '200':
@@ -194,7 +194,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
-  
+
   '/cases/{case_id}/invitation':
     parameters:
       - name: case_id
@@ -212,7 +212,7 @@ paths:
         - BearerAuth: []
       summary: 3.5 Invite other practitioners to join the case.
       description: >-
-        When invite other practitioners, the manager also need to assign a role to every practitioner.  
+        When invite other practitioners, the manager also need to assign a role to every practitioner.
       responses:
         '200':
           $ref: '#/components/responses/NormalResponse'
@@ -262,7 +262,7 @@ paths:
           $ref: '#/components/responses/NormalResponse'
       requestBody:
         $ref: '#/components/requestBodies/CreditorInfo'
-                    
+
   '/cases/{case_id}/creditors/claim':
     parameters:
       - name: case_id
@@ -298,7 +298,7 @@ paths:
       schema:
         type: string
         format: uuid
-        example: 550e8400-e29b-41d4-a716-446655440000   
+        example: 550e8400-e29b-41d4-a716-446655440000
     post:
       tags:
         - cases
@@ -323,7 +323,7 @@ paths:
                   description: the practitioner be rearranged to review the claim
                   type: string
                   format: uuid
-                  example: 550e8400-e29b-41d4-a716-446655440000   
+                  example: 550e8400-e29b-41d4-a716-446655440000
 
   '/cases/{case_id}/practitioners/get-claims':
     parameters:
@@ -347,7 +347,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          $ref: '#/components/responses/ClaimListResponse'    
+          $ref: '#/components/responses/ClaimListResponse'
 
   '/claims/{claim_id}/practitioners/assign':
     parameters:
@@ -358,7 +358,7 @@ paths:
       schema:
         type: string
         format: uuid
-        example: 550e8400-e29b-41d4-a716-446655440000   
+        example: 550e8400-e29b-41d4-a716-446655440000
     post:
       tags:
         - cases
@@ -385,7 +385,7 @@ paths:
                     type: string
                     description: the practitioner be rearranged to review the claim
                     format: uuid
-                    example: 550e8400-e29b-41d4-a716-446655440000  
+                    example: 550e8400-e29b-41d4-a716-446655440000
 
 components:
   schemas:
@@ -402,7 +402,7 @@ components:
         message:
           type: string
           example: Invalid operation!
-    
+
     MessageOnly:
       type: object
       properties:
@@ -414,7 +414,7 @@ components:
         message:
           type: string
           example: Valid operation!
-       
+
     200InfoTable:
       type: object
       properties:
@@ -434,7 +434,7 @@ components:
                 The download field of the case information table.
                 field can be nullable.
               type: string
-              nullable: true   
+              nullable: true
 
     200CaseInfo:
       type: object
@@ -468,8 +468,8 @@ components:
               description: the only id of the case
               type: string
               format: uuid
-              example: 550e8400-e29b-41d4-a716-446655440000  
-    
+              example: 550e8400-e29b-41d4-a716-446655440000
+
     200RecieveInvitationResponse:
       type: object
       properties:
@@ -483,7 +483,7 @@ components:
           example: receive invitation successfully!
         body:
           type: object
-          properties:          
+          properties:
             cases_info:
               type: array
               nullable: true
@@ -496,7 +496,7 @@ components:
                         format: uuid
                         example: 550e8400-e29b-41d4-a716-446655440000
                   - $ref: '#/components/schemas/CaseInfo'
-     
+
     200ClaimListResponse:
       type: object
       properties:
@@ -513,8 +513,8 @@ components:
           properties:
             creditors_claims:
               $ref: '#/components/schemas/CreditorsWithClaims'
-                  
-    
+
+
     Debtor:
       type: object
       properties:
@@ -561,7 +561,7 @@ components:
             phone:
               type: string
               example: "13822098739"
-          
+
     Trustee:
       description: A trustee is a person or firm that holds or administers property or assets for the benefit of a third party
       type: object
@@ -586,8 +586,8 @@ components:
           type: string
           description: address is the address of the trustee
           example: 800 Dongchuan Road, Minhang District, Shanghai, China
-        
-    
+
+
     CompanyApplicant:
       description: The applicant is a company
       allOf:
@@ -614,7 +614,7 @@ components:
               example: "5385470"
             trustee:
               $ref: '#/components/schemas/Trustee'
-    
+
     NaturalPersonApplicant:
       description: The applicant is a natural person
       allOf:
@@ -642,7 +642,7 @@ components:
               maxLength: 4
               items:
                 $ref: '#/components/schemas/Trustee'
-            
+
     Applicant:
       type: object
       description: the person who want to launch the case
@@ -662,7 +662,7 @@ components:
         applicant_type:
           description: type of the applicant
           type: string
-        
+
     Court:
       type: object
       description: information of the court
@@ -695,7 +695,7 @@ components:
           minLength: 1
           items:
             $ref: '#/components/schemas/CourtMembersInfo'
-      
+
     CourtMembersInfo:
       description: basic information of a court member
       type: object
@@ -711,7 +711,7 @@ components:
           type: string
           nullable: true
           example: "5385479"
-    
+
     CaseInfo:
       description: basic information of the case
       type: object
@@ -733,7 +733,7 @@ components:
         todo:
           type: string
           example: todo
-    
+
     ManagerInfo:
       description: basic information of the case manager
       properties:
@@ -753,7 +753,7 @@ components:
           type: string
           description: the contact address of the manager
           example: "4 Chome-3-11 Shiba, Minato City, Tokyo 108-0014"
-          
+
     LiquidationTeamAsManager:
       description: The liquidation team is composed of several natural persons, which may be in different companies.
       allOf:
@@ -795,7 +795,7 @@ components:
               items:
                 type: string
                 example: the Legend Agency
-    
+
     NaturalPersonAsManager:
       description: The manager is actually a single natural person.
       allOf:
@@ -810,8 +810,8 @@ components:
               type: string
               description: the company the natural person is in
               example: alibaba
-    
-    ManagerMembers:      
+
+    ManagerMembers:
       type: object
       description: the manager composition model and basic information of manager members
       discriminator:
@@ -873,7 +873,7 @@ components:
               nullable: true
             address:
               type: string
-              example: 800 Dongchuan Road, Minhang District, Shanghai, China         
+              example: 800 Dongchuan Road, Minhang District, Shanghai, China
 
     NaturalPersonClaimInfo:
       type: object
@@ -902,7 +902,7 @@ components:
           minLength: 1
           items:
             type: string
-            enum: 
+            enum:
               - financing
               - operating
               - public-utility
@@ -917,9 +917,9 @@ components:
             $ref: '#/components/schemas/Trustee'
         phone:
           type: string
-          description: >- 
+          description: >-
             By default the contact number is the first trustee phone of the trustees.
-            It can be changed if the debtor wants to                  
+            It can be changed if the debtor wants to
         bank_account:
           type: object
           description: bank account information of a creditor
@@ -945,7 +945,7 @@ components:
               type: object
               properties:
                 todo:
-                  example: todo      
+                  example: todo
 
     CreditorsWithClaims:
       description: return a list of creditors, which have multiple claims need to be checked.
@@ -1018,7 +1018,7 @@ components:
                           nullable: true
                         address:
                           type: string
-                          example: 800 Dongchuan Road, Minhang District, Shanghai, China 
+                          example: 800 Dongchuan Road, Minhang District, Shanghai, China
                 - allOf:
                   - type: object
                     properties:
@@ -1088,13 +1088,13 @@ components:
           type: object
           properties:
             todo:
-              example: todo, 具体要上传的文件待确定     
+              example: todo, 具体要上传的文件待确定
 
 
-  requestBodies:    
+  requestBodies:
     CreditorInfo:
       description: >-
-        Information of a creditor. 
+        Information of a creditor
         A case may have many creditors.
         Every creditor in a case needs to fill in information.
       required: true
@@ -1191,7 +1191,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/200InfoTable'
               - $ref: '#/components/schemas/Error'
-    
+
     CaseInfoResponse:
       description: basic information of the case
       content:
@@ -1209,7 +1209,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/200CaseId'
               - $ref: '#/components/schemas/Error'
-    
+
     CaseInvitationResponse:
       description: return the invitation response, including case basic information.
       content:
