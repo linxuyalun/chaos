@@ -578,10 +578,10 @@ components:
           type: string
           description: the company user works for
           example: alibaba
-        company_fixed_line:
+        phone:
           type: string
-          description: the phone number of the company
-          example: "5385470"
+          description: the phone number of the trustee
+          example: "13452345678"
         address:
           type: string
           description: address is the address of the trustee
