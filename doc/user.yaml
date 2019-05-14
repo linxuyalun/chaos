@@ -339,7 +339,7 @@ components:
         claim_declaration_agreement:
           description: >-
             If a Creditor wants to register, he/she must agree the claim declaration agreement
-            0 represents unagree, 1 represents agree
+            0 represents disagree, 1 represents agree
           type: integer
           enum:
             - 0
