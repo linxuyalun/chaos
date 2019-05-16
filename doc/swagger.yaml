@@ -52,10 +52,31 @@ info:
     | contract_situation     | Object | 合同情况             | creditors_claims           | Array  | 债权人及其证明材料 |
     | type                   | String | 类型                 | company_trustee            | Object | 法人开户受托人     |
     | claims                 | Array  | 债权（复数）         | practitioner_id            | String | 从业人员id         |
-    | practitioner_ids       | Array  | 从业人员id（复数）   |                            |        |                    |
+    | practitioner_ids       | Array  | 从业人员id（复数）   | creditor_info_state        | String | 债权人信息表填写状态 |
+    | case_ids               | Array  | 案件的唯一id（复数） |                            |        |                      |
 
+    # Change Log
 
-  version: "0.1.1"
+    ## v0.2.0(2019.05.14)
+
+    ### Features
+
+    * Add API `/cases/{case_id}/creditors/information` get mothod
+    * Add API `/cases/{case_id}/creditors/information-state`
+
+    ## v0.2.1(2019.05.15)
+
+    ### Features
+
+    * Add API `/practitioners/common-cases`
+
+    ### Bug Fixes
+
+    * Fix wrong return of `/cases/{case_id}/creditors/information`
+    * Fix wrong return of `/cases/{case_id}/creditors/information-state`
+    * Fix wrong return of `/cases/{case_id}/practitioners/get-claims`
+
+  version: "0.2.1"
   title: The Legend
   contact:
     name: API Support
@@ -75,7 +96,76 @@ tags:
       All information can be seen in the case.
 
 paths:
+  '/cases/common-cases':
+    get:
+      tags:
+        - cases
+      summary: 2.4 Return all common cases of a user
+      description: >-
+        By default, this API will return the latest case of the user.
+        User can set several cases as his/her commonly used cases.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CommonCasesResponse'
+
+  '/cases/common-cases/{case_id}/actions/add':
+    get:
+      tags:
+        - cases
+      summary: 2.4 Add a spec case to common cases
+      parameters:
+        - name: case_id
+          in: path
+          description: uuid of the case
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
+      description: >-
+        The practitioner add a specific case to common cases list
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+
+  '/cases/common-cases/{case_id}/actions/remove':
+    get:
+      tags:
+        - cases
+      summary: 2.4 Remove a spec case from common cases
+      parameters:
+        - name: case_id
+          in: path
+          description: uuid of the case
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
+      description: >-
+        The practitioner remove a specific case from common cases list
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/NormalResponse'
+
   '/cases':
+    get:
+      tags:
+        - cases
+      summary: 2.4 Return all cases of a practitioner
+      description: >-
+        Return all cases a practitioner involves, excluding invited ones but unaccepted.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CasesResponse'
     post:
       tags:
         - cases
@@ -262,6 +352,37 @@ paths:
           $ref: '#/components/responses/NormalResponse'
       requestBody:
         $ref: '#/components/requestBodies/CreditorInfo'
+    get:
+      tags:
+        - cases
+      summary: 5.2 Get creditor information
+      description: Get information of a creditor
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CreditorInfoResponse'
+
+  '/cases/{case_id}/creditors/information-state':
+    parameters:
+      - name: case_id
+        in: path
+        description: uuid of the case
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+    get:
+      tags:
+        - cases
+      summary: 5.2 Get creditor information state
+      description: Get information state of a creditor, can be filled-in or unfilled
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CreditorInfoStateResponse'
 
   '/cases/{case_id}/creditors/claim':
     parameters:
@@ -507,13 +628,109 @@ components:
             - 200
         message:
           type: string
-          example: receive invitation successfully!
+          example: receive claim list successfully!
         body:
           type: object
           properties:
             creditors_claims:
               $ref: '#/components/schemas/CreditorsWithClaims'
 
+    200CredetorInfo:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: receive credetor basic information successfully!
+        body:
+          $ref: '#/components/schemas/CreditorInfo'
+
+    200CreditorInfoStateResponse:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: get credetor information state
+        body:
+          $ref: '#/components/schemas/CreditorInfoState'
+
+    200CommonCasesResponse:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: receive common cases successfully!
+        body:
+          type: object
+          properties:
+            case_ids:
+              description: all common cases' id
+              type: array
+              minLength: 1
+              items:
+                type: object
+                properties:
+                  case_id:
+                    type: string
+                    format: uuid
+                    example: 550e8400-e29b-41d4-a716-446655440000
+                  name:
+                    type: string
+                    description: company name as the case name
+                    example: alibaba
+                  role:
+                    type: string
+                    description: the role of the practitioner in this case
+                    example: manager
+
+    200Cases:
+      type: object
+      properties:
+        status_code:
+          description: successful operation
+          type: integer
+          enum:
+            - 200
+        message:
+          type: string
+          example: receive cases successfully!
+        body:
+          type: object
+          properties:
+            cases:
+              type: array
+              items:
+                type: object
+                properties:
+                  case_id:
+                    type: string
+                    format: uuid
+                    example: 550e8400-e29b-41d4-a716-446655440000
+                  name:
+                    type: string
+                    description: company name as the case name
+                    example: alibaba
+                  role:
+                    type: string
+                    description: the role of the practitioner in this case
+                    example: manager
+                  todo:
+                    type: string
+                    example: todo
 
     Debtor:
       type: object
@@ -1090,6 +1307,14 @@ components:
             todo:
               example: todo, 具体要上传的文件待确定
 
+    CreditorInfoState:
+      type: object
+      properties:
+        creditor_info_state:
+          type: string
+          enum:
+            - filled-in
+            - unfilled
 
   requestBodies:
     CreditorInfo:
@@ -1183,6 +1408,24 @@ components:
               - $ref: '#/components/schemas/MessageOnly'
               - $ref: '#/components/schemas/Error'
 
+    CasesResponse:
+      description: all cases basic information responses
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200Cases'
+              - $ref: '#/components/schemas/Error'
+
+    CreditorInfoResponse:
+      description: credetor info response object
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200CredetorInfo'
+              - $ref: '#/components/schemas/Error'
+
     InfoTableResponse:
       description: case information table response object
       content:
@@ -1226,6 +1469,24 @@ components:
           schema:
             oneOf:
               - $ref: '#/components/schemas/200ClaimListResponse'
+              - $ref: '#/components/schemas/Error'
+
+    CreditorInfoStateResponse:
+      description: return the credetor information state
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200CreditorInfoStateResponse'
+              - $ref: '#/components/schemas/Error'
+
+    CommonCasesResponse:
+      description: return common cases of the practitioner
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/200CommonCasesResponse'
               - $ref: '#/components/schemas/Error'
 
   securitySchemes:
