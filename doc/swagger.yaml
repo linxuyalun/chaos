@@ -100,7 +100,7 @@ paths:
     get:
       tags:
         - cases
-      summary: 2.4 Return all common cases of a user
+      summary: 2.4 Return all common cases of a practitioner
       description: >-
         By default, this API will return the latest case of the user.
         User can set several cases as his/her commonly used cases.
@@ -675,27 +675,7 @@ components:
           type: string
           example: receive common cases successfully!
         body:
-          type: object
-          properties:
-            case_ids:
-              description: all common cases' id
-              type: array
-              minLength: 1
-              items:
-                type: object
-                properties:
-                  case_id:
-                    type: string
-                    format: uuid
-                    example: 550e8400-e29b-41d4-a716-446655440000
-                  name:
-                    type: string
-                    description: company name as the case name
-                    example: alibaba
-                  role:
-                    type: string
-                    description: the role of the practitioner in this case
-                    example: manager
+          $ref: '#/components/schemas/Cases'
 
     200Cases:
       type: object
@@ -709,28 +689,34 @@ components:
           type: string
           example: receive cases successfully!
         body:
-          type: object
-          properties:
-            cases:
-              type: array
-              items:
-                type: object
-                properties:
-                  case_id:
-                    type: string
-                    format: uuid
-                    example: 550e8400-e29b-41d4-a716-446655440000
-                  name:
-                    type: string
-                    description: company name as the case name
-                    example: alibaba
-                  role:
-                    type: string
-                    description: the role of the practitioner in this case
-                    example: manager
-                  todo:
-                    type: string
-                    example: todo
+          $ref: '#/components/schemas/Cases'
+
+    Cases:
+      type: object
+      properties:
+        cases:
+          description: all common cases
+          type: array
+          minLength: 1
+          items:
+            type: object
+            properties:
+              case_id:
+                type: string
+                format: uuid
+                example: 550e8400-e29b-41d4-a716-446655440000
+              name:
+                type: string
+                description: company name as the case name
+                example: alibaba
+              role:
+                type: string
+                description: the role of the practitioner in this case
+                example: manager
+              todo:
+                type: string
+                description: todo
+                example: todo
 
     Debtor:
       type: object
@@ -803,7 +789,6 @@ components:
           type: string
           description: address is the address of the trustee
           example: 800 Dongchuan Road, Minhang District, Shanghai, China
-
 
     CompanyApplicant:
       description: The applicant is a company
